@@ -1,0 +1,4 @@
+services:
+#    nao_back_office.example:
+#        class: NAO\BackOfficeBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
