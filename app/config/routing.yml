@@ -5,7 +5,3 @@ nao_back_office:
 nao_app:
     resource: "@NAOAppBundle/Resources/config/routing.yml"
     prefix:   /
-
-app:
-    resource: "@AppBundle/Controller/"
-    type:     annotation
