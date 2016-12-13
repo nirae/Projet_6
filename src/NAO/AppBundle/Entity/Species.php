@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="taxref_aves")
  * @ORM\Entity
  */
-class TaxrefAves
+class Species
 {
     /**
      * @var string
