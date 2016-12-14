@@ -1,3 +1,23 @@
 nao_app_homepage:
     path:     /
     defaults: { _controller: NAOAppBundle:App:index }
+
+nao_back_office_observations:
+    path:     /mes-observations
+    defaults: { _controller: NAOAppBundle:App:observations }
+
+nao_back_office_add:
+    path:   /ajouter
+    defaults: { _controller: NAOAppBundle:App:add }
+
+nao_back_office_validations:
+    path:   /validations
+    defaults: { _controller: NAOAppBundle:App:validations }
+
+nao_back_office_account:
+    path:   /mon-compte
+    defaults: { _controller: NAOAppBundle:App:account }
+
+nao_back_office_admin:
+    path:   /admin
+    defaults: { _controller: NAOAppBundle:App:admin }

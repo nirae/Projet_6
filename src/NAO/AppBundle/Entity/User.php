@@ -1,6 +1,6 @@
 <?php
 
-namespace NAO\BackOfficeBundle\Entity;
+namespace NAO\AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;

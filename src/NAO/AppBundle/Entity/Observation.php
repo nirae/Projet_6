@@ -61,11 +61,15 @@ class Observation
     private $status;
 
     /**
-     * @ORM\ManyToOne(targetEntity="NAO\BackOfficeBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="NAO\AppBundle\Entity\User")
      * @ORM\JoinColumn(nullable=false)
      */
     private $owner;
 
+
+    public function __construct() {
+        $this->status = "En attente";
+    }
 
     /**
      * Get id
