@@ -68,7 +68,6 @@ class User implements UserInterface, \Serializable
     public function getSalt()
     {
         // you *may* need a real salt depending on your encoder
-        // see section on salt below
         return null;
     }
 
@@ -105,7 +104,7 @@ class User implements UserInterface, \Serializable
             // $this->salt
             ) = unserialize($serialized);
         }
-    
+
     /**
      * Get id
      *

@@ -1,6 +1,6 @@
 nao_back_office:
     resource: "@NAOBackOfficeBundle/Resources/config/routing.yml"
-    prefix:   /
+    prefix:   /backoffice
 
 nao_app:
     resource: "@NAOAppBundle/Resources/config/routing.yml"
