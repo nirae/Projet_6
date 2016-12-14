@@ -20,7 +20,7 @@ class Observation
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="NAO\AppBundle\Entity\TaxrefAves")
+     * @ORM\ManyToOne(targetEntity="NAO\AppBundle\Entity\Species")
      * @ORM\JoinColumn(nullable=false)
      */
     private $species;
@@ -61,7 +61,7 @@ class Observation
     private $status;
 
     /**
-     * @ORM\ManyToOne(targetEntity="NAO\AppBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="NAO\BackOfficeBundle\Entity\User")
      * @ORM\JoinColumn(nullable=false)
      */
     private $owner;

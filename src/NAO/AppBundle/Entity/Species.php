@@ -5,9 +5,9 @@ namespace NAO\AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * TaxrefAves
+ * Species
  *
- * @ORM\Table(name="taxref_aves")
+ * @ORM\Table(name="species")
  * @ORM\Entity
  */
 class Species
@@ -259,7 +259,7 @@ class Species
      *
      * @param string $regne
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setRegne($regne)
     {
@@ -283,7 +283,7 @@ class Species
      *
      * @param string $phylum
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setPhylum($phylum)
     {
@@ -307,7 +307,7 @@ class Species
      *
      * @param string $classe
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setClasse($classe)
     {
@@ -331,7 +331,7 @@ class Species
      *
      * @param string $ordre
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setOrdre($ordre)
     {
@@ -355,7 +355,7 @@ class Species
      *
      * @param string $famille
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setFamille($famille)
     {
@@ -379,7 +379,7 @@ class Species
      *
      * @param integer $cdNom
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setCdNom($cdNom)
     {
@@ -403,7 +403,7 @@ class Species
      *
      * @param integer $cdTaxsup
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setCdTaxsup($cdTaxsup)
     {
@@ -427,7 +427,7 @@ class Species
      *
      * @param integer $cdRef
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setCdRef($cdRef)
     {
@@ -451,7 +451,7 @@ class Species
      *
      * @param string $rang
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setRang($rang)
     {
@@ -475,7 +475,7 @@ class Species
      *
      * @param string $lbNom
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setLbNom($lbNom)
     {
@@ -499,7 +499,7 @@ class Species
      *
      * @param string $lbAuteur
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setLbAuteur($lbAuteur)
     {
@@ -523,7 +523,7 @@ class Species
      *
      * @param string $nomComplet
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setNomComplet($nomComplet)
     {
@@ -547,7 +547,7 @@ class Species
      *
      * @param string $nomValide
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setNomValide($nomValide)
     {
@@ -571,7 +571,7 @@ class Species
      *
      * @param string $nomVern
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setNomVern($nomVern)
     {
@@ -595,7 +595,7 @@ class Species
      *
      * @param string $nomVernEng
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setNomVernEng($nomVernEng)
     {
@@ -619,7 +619,7 @@ class Species
      *
      * @param integer $habitat
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setHabitat($habitat)
     {
@@ -643,7 +643,7 @@ class Species
      *
      * @param string $fr
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setFr($fr)
     {
@@ -667,7 +667,7 @@ class Species
      *
      * @param string $gf
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setGf($gf)
     {
@@ -691,7 +691,7 @@ class Species
      *
      * @param string $mar
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setMar($mar)
     {
@@ -715,7 +715,7 @@ class Species
      *
      * @param string $gua
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setGua($gua)
     {
@@ -739,7 +739,7 @@ class Species
      *
      * @param string $sm
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setSm($sm)
     {
@@ -763,7 +763,7 @@ class Species
      *
      * @param string $sb
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setSb($sb)
     {
@@ -787,7 +787,7 @@ class Species
      *
      * @param string $spm
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setSpm($spm)
     {
@@ -811,7 +811,7 @@ class Species
      *
      * @param string $may
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setMay($may)
     {
@@ -835,7 +835,7 @@ class Species
      *
      * @param string $epa
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setEpa($epa)
     {
@@ -859,7 +859,7 @@ class Species
      *
      * @param string $reu
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setReu($reu)
     {
@@ -883,7 +883,7 @@ class Species
      *
      * @param string $sa
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setSa($sa)
     {
@@ -907,7 +907,7 @@ class Species
      *
      * @param string $ta
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setTa($ta)
     {
@@ -931,7 +931,7 @@ class Species
      *
      * @param string $taaf
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setTaaf($taaf)
     {
@@ -955,7 +955,7 @@ class Species
      *
      * @param string $nc
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setNc($nc)
     {
@@ -979,7 +979,7 @@ class Species
      *
      * @param string $wf
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setWf($wf)
     {
@@ -1003,7 +1003,7 @@ class Species
      *
      * @param string $pf
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setPf($pf)
     {
@@ -1027,7 +1027,7 @@ class Species
      *
      * @param string $cli
      *
-     * @return TaxrefAves
+     * @return Species
      */
     public function setCli($cli)
     {
