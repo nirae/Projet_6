@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
 * User
@@ -62,14 +61,13 @@ class User implements UserInterface, \Serializable
     private $email;
 
     /**
-     * @ORM\OneToMany(targetEntity="NAO\AppBundle\Entity\Observation", mappedBy="owner", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="NAO\AppBundle\Entity\Observation", mappedBy="owner")
      */
     private $observations;
 
     public function __construct() {
         $this->creationDate = new \DateTime();
         $this->roles = array('ROLE_USER');
-        $this->observations = new ArrayCollection();
     }
 
     public function getSalt()
@@ -224,39 +222,5 @@ class User implements UserInterface, \Serializable
     public function getEmail()
     {
         return $this->email;
-    }
-
-    /**
-     * Add observation
-     *
-     * @param \NAO\AppBundle\Entity\Observation $observation
-     *
-     * @return User
-     */
-    public function addObservation(\NAO\AppBundle\Entity\Observation $observation)
-    {
-        $this->observations[] = $observation;
-
-        return $this;
-    }
-
-    /**
-     * Remove observation
-     *
-     * @param \NAO\AppBundle\Entity\Observation $observation
-     */
-    public function removeObservation(\NAO\AppBundle\Entity\Observation $observation)
-    {
-        $this->observations->removeElement($observation);
-    }
-
-    /**
-     * Get observations
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getObservations()
-    {
-        return $this->observations;
     }
 }

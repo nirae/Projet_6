@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+    {# S'il y a une erreur, on l'affiche dans un joli cadre #}
+    {% if error %}
+    <div class="alert alert-danger">{{ error.message }}</div>
+    {% endif %}
+
+    <form action="{{ path('login') }}" method="post">
+        <label for="username">Login :</label>
+        <input type="text" id="username" name="_username" value="{{ last_username }}" />
+
+        <label for="password">Mot de passe :</label>
+        <input type="password" id="password" name="_password" />
+        <br />
+        <input type="submit" value="Connexion" />
+    </form>
+</body>
+</html>

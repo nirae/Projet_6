@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Observations</title>
-    </head>
-    <body>
-        <h1>Observations</h1>
-    </body>
+<head>
+    <meta charset="utf-8">
+    <title>Observations</title>
+</head>
+<body>
+    {% for flash_message in app.session.flashBag.get('notice') %}
+        <div class="flash-notice">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+    <h1>Observations</h1>
+    {% for obs in app.user.observations %}
+        <p>{{ obs.id }} - {{ obs.species.nomValide }}</p>
+    {% endfor %}
+</body>
 </html>

@@ -1,24 +1,36 @@
-# To get started with security, check out the documentation:
-# http://symfony.com/doc/current/security.html
-security:
+# app/config/security.yml
 
-    # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+security:
+    # Encode les mots de passe
+    encoders:
+        NAO\AppBundle\Entity\User:
+            algorithm: bcrypt
+
+    role_hierarchy:
+        ROLE_NATUR: ROLE_USER
+        ROLE_ADMIN: [ROLE_USER, ROLE_NATUR]
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_NATUR, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
     providers:
-        in_memory:
-            memory: ~
+        main:
+            entity:
+                class: NAOAppBundle:User
 
     firewalls:
-        # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-
         main:
-            anonymous: ~
-            # activate different ways to authenticate
+            pattern: ^/
+            anonymous: true
+            provider: main
+            form_login:
+                login_path: login
+                check_path: login
+                default_target_path: nao_back_office_observations
+            logout:
+                path: logout
+                target: /
 
-            # http_basic: ~
-            # http://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
-
-            # form_login: ~
-            # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
+    access_control:
+        - { path: ^/backoffice/, roles: ['ROLE_ADMIN', 'ROLE_USER', 'ROLE_NATUR'] }

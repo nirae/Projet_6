@@ -8,6 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 
@@ -19,7 +20,10 @@ class ObservationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('date', DateType::class)
+            ->add('date', DateType::class, array(
+                'format' => 'dd-MM-yyyy',
+                'label' => 'Jour de la visite',
+            ))
             ->add('latitude', TextType::class)
             ->add('longitude', TextType::class)
             ->add('userMessage', TextareaType::class)
@@ -27,7 +31,13 @@ class ObservationType extends AbstractType
                 'class' => 'NAOAppBundle:Species',
                 'choice_label' => 'nomValide',
             ))
-            ->add('image', ImageType::class);
+            ->add('image', ImageType::class, array(
+                'required' => false,
+            ))
+            ->add('save', SubmitType::class, array(
+                'label' => 'Valider',
+            ))
+        ;
     }
 
     /**

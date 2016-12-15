@@ -72,7 +72,7 @@ class Observation
 
     /**
      * @ORM\ManyToOne(targetEntity="NAO\AppBundle\Entity\User", inversedBy="observations")
-     * @ORM\JoinColumn(nullable=false, referencedColumnName="id")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $owner;
 

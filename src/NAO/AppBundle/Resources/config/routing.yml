@@ -2,22 +2,33 @@ nao_app_homepage:
     path:     /
     defaults: { _controller: NAOAppBundle:App:index }
 
+login:
+    path: /login
+    defaults: { _controller: NAOAppBundle:App:login }
+
+logout:
+    path: /logout
+
+registration:
+    path: /register
+    defaults: { _controller: NAOAppBundle:App:register }
+
 nao_back_office_observations:
-    path:     /mes-observations
+    path:     /backoffice/mes-observations
     defaults: { _controller: NAOAppBundle:App:observations }
 
 nao_back_office_add:
-    path:   /ajouter
+    path:   /backoffice/ajouter
     defaults: { _controller: NAOAppBundle:App:add }
 
 nao_back_office_validations:
-    path:   /validations
+    path:   /backoffice/validations
     defaults: { _controller: NAOAppBundle:App:validations }
 
 nao_back_office_account:
-    path:   /mon-compte
+    path:   /backoffice/mon-compte
     defaults: { _controller: NAOAppBundle:App:account }
 
 nao_back_office_admin:
-    path:   /admin
+    path:   /backoffice/admin
     defaults: { _controller: NAOAppBundle:App:admin }
