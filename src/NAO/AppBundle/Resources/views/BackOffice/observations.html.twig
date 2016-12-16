@@ -13,6 +13,7 @@
     <h1>Observations</h1>
     {% for obs in app.user.observations %}
         <p>{{ obs.id }} - {{ obs.species.nomValide }}</p>
+        <img src="/{{ obs.image.webPath }}" alt="{{ obs.image.alt }}" width="150px"/>
     {% endfor %}
 </body>
 </html>

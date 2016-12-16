@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 *
 * @ORM\Table(name="image")
 * @ORM\Entity
+* @ORM\HasLifecycleCallbacks
 */
 class Image
 {
@@ -73,7 +74,7 @@ class Image
             }
         }
 
-        $name = $this->id . $this->extension;
+        $name = $this->id . '.' . $this->extension;
         // On déplace le fichier dans le dossier
         $this->file->move($this->getUploadRootDir(), $name);
     }
@@ -120,12 +121,12 @@ class Image
         $this->file = $file;
 
         // On vérifie si on avait déjà un fichier pour cette entité
-        if (null !== $this->url) {
+        if (null !== $this->extension) {
             // On sauvegarde l'extension du fichier pour le supprimer plus tard
-            $this->tempFilename = $this->url;
+            $this->tempFilename = $this->extension;
 
-            // On réinitialise les valeurs des attributs url et alt
-            $this->url = null;
+            // On réinitialise les valeurs des attributs extension et alt
+            $this->extension = null;
             $this->alt = null;
         }
     }
