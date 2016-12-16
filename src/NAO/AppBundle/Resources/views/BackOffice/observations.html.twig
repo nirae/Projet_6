@@ -12,8 +12,10 @@
     {% endfor %}
     <h1>Observations</h1>
     {% for obs in app.user.observations %}
-        <p>{{ obs.id }} - {{ obs.species.nomValide }}</p>
-        <img src="/{{ obs.image.webPath }}" alt="{{ obs.image.alt }}" width="150px"/>
+        <p>{{ obs.id }} - {{ obs.species.nomValide }} - {{ obs.status }}</p>
+        {% if obs.image %}
+            <img src="/{{ obs.image.webPath }}" alt="{{ obs.image.alt }}" width="150px"/>
+        {% endif %}
     {% endfor %}
 </body>
 </html>

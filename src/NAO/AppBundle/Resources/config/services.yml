@@ -1,4 +1,14 @@
 services:
-#    nao_app.example:
-#        class: NAO\AppBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]
+    nao_app.user_manager:
+        class: NAO\AppBundle\UserManagerService\UserManager
+        arguments:
+            - "@security.authorization_checker"
+            - "@security.authentication_utils"
+            - "@security.password_encoder"
+            - "@doctrine.orm.entity_manager"
+            - "@form.factory"
+    nao_app.backoffice_manager:
+        class: NAO\AppBundle\BackOfficeManagerService\BackOfficeManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@form.factory"

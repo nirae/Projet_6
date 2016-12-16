@@ -4,14 +4,14 @@ nao_app_homepage:
 
 login:
     path: /login
-    defaults: { _controller: NAOAppBundle:App:login }
+    defaults: { _controller: NAOAppBundle:Security:login }
 
 logout:
     path: /logout
 
 registration:
     path: /register
-    defaults: { _controller: NAOAppBundle:App:register }
+    defaults: { _controller: NAOAppBundle:Security:register }
 
 nao_back_office_observations:
     path:     /backoffice/mes-observations
