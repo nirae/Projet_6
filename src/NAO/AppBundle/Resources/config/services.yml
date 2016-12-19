@@ -1,14 +1,17 @@
 services:
     nao_app.user_manager:
-        class: NAO\AppBundle\UserManagerService\UserManager
+        class: NAO\AppBundle\Service\UserManager
         arguments:
             - "@security.authorization_checker"
             - "@security.authentication_utils"
             - "@security.password_encoder"
             - "@doctrine.orm.entity_manager"
             - "@form.factory"
+            - "@session"
     nao_app.backoffice_manager:
-        class: NAO\AppBundle\BackOfficeManagerService\BackOfficeManager
+        class: NAO\AppBundle\Service\BackOfficeManager
         arguments:
             - "@doctrine.orm.entity_manager"
             - "@form.factory"
+            - "@security.token_storage"
+            - "@session"

@@ -32,14 +32,9 @@ class AppController extends Controller
     */
     public function addAction(Request $request)
     {
-        $um = $this->get('nao_app.backoffice_manager');
-        $um->formCreation();
+        $form = $this->get('nao_app.backoffice_manager')->add($request);
 
-        if ($um->addObsFormValidation($request, $this->getUser())) {
-            return $this->redirectToRoute('nao_back_office_observations');
-        }
-
-        return array('form' => $um->getForm()->createView());
+        return array('form' => $form);
     }
 
     /**

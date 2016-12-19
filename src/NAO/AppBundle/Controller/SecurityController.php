@@ -13,13 +13,10 @@ class SecurityController extends Controller
     */
     public function loginAction(Request $request)
     {
-        $um = $this->get('nao_app.user_manager');
+        // Array of last Username and Error if there is one
+        $datas = $this->get('nao_app.user_manager')->login();
 
-        if ($um->userAlreadyConnected()) {
-            return $this->redirectToRoute('nao_back_office_observations');
-        }
-
-        return $um->usernameAndError();
+        return $datas;
     }
 
     /**
@@ -27,15 +24,8 @@ class SecurityController extends Controller
     */
     public function registerAction(Request $request)
     {
-        $um = $this->get('nao_app.user_manager');
-        $um->formCreation();
+        $form = $this->get('nao_app.user_manager')->register($request);
 
-        if ($um->formValidation($request)) {
-
-            $this->addFlash('notice', 'Bienvenue !');
-            return $this->redirectToRoute('nao_back_office_observations');
-        }
-
-        return array('form' => $um->getForm()->createView());
+        return array('form' => $form);
     }
 }
