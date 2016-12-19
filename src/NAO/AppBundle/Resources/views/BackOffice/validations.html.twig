@@ -5,6 +5,17 @@
         <title>Validations</title>
     </head>
     <body>
+        {% for flash_message in app.session.flashBag.get('notice') %}
+            <div class="flash-notice">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
         <h1>Validations</h1>
+        {% for obs in observations %}
+            <p>{{ obs.id }} - {{ obs.species.nomValide }} - {{ obs.status }}</p>
+            {% if obs.image %}
+                <img src="/{{ obs.image.webPath }}" alt="{{ obs.image.alt }}" width="150px"/>
+            {% endif %}
+        {% endfor %}
     </body>
 </html>

@@ -15,3 +15,4 @@ services:
             - "@form.factory"
             - "@security.token_storage"
             - "@session"
+            - "@security.password_encoder"

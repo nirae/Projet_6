@@ -44,6 +44,8 @@ class User implements UserInterface, \Serializable
     */
     private $password;
 
+    private $role;
+
     /**
     * @ORM\Column(name="roles", type="array")
     */
@@ -258,5 +260,13 @@ class User implements UserInterface, \Serializable
     public function getObservations()
     {
         return $this->observations;
+    }
+
+    public function getRole() {
+        return $this->role;
+    }
+
+    public function setRole($role) {
+        $this->role = $role;
     }
 }

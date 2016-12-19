@@ -5,6 +5,14 @@
         <title>Admin</title>
     </head>
     <body>
+        {% for flash_message in app.session.flashBag.get('notice') %}
+            <div class="flash-notice">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
         <h1>Admin</h1>
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_end(form) }}
     </body>
 </html>

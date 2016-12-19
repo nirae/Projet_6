@@ -4,8 +4,6 @@ namespace NAO\AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use NAO\AppBundle\Entity\Observation;
-use NAO\AppBundle\Form\ObservationType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
@@ -44,13 +42,28 @@ class AppController extends Controller
     */
     public function validationsAction()
     {
-        return array();
+        $repository = $this
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository("NAOAppBundle:Observation");
+
+        $waitingObs = $repository->findBy(array("status" => "En attente"));
+
+        // Reception AJAX
+        // Formulaire html simple commentaire obligatoire + bouton valider ou refuser
+        // Le clic sur un des boutons enregistre une data "validée" ou "refusée"
+        // Change le statut en back
+        // Envoi en AJAX des données puis réponse OK qui supprime l'observation de la liste
+
+        return array(
+            "observations" => $waitingObs,
+        );
     }
 
     /**
     * @Template("NAOAppBundle:BackOffice:account.html.twig")
     */
-    public function accountAction()
+    public function accountAction($request)
     {
         return array();
     }
@@ -60,8 +73,11 @@ class AppController extends Controller
     *
     * @Security("has_role('ROLE_ADMIN')")
     */
-    public function adminAction()
+    public function adminAction(Request $request)
     {
-        return array();
+        // On génère un mot de passe temporaire et un mail est envoyé pour lui indiquer de le changer dans ses preferences
+        $form = $this->get('nao_app.backoffice_manager')->createUser($request);
+
+        return array('form' => $form);
     }
 }
