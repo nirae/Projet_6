@@ -11,8 +11,23 @@
             </div>
         {% endfor %}
         <h1>Admin</h1>
-        {{ form_start(form) }}
-        {{ form_errors(form) }}
-        {{ form_end(form) }}
+        <div class="">
+            <h1>Particuliers : </h1>
+            {% for a in users.amateurs %}
+                <p>{{ a.username }}</p>
+            {% endfor %}
+        </div>
+        <div class="">
+            <h1>Naturalistes : </h1>
+            {% for n in users.naturs %}
+                <p>{{ n.username }}</p>
+            {% endfor %}
+        </div>
+        <div class="">
+            <h1>Admin : </h1>
+            {% for a in users.admins %}
+                <p>{{ a.username }}</p>
+            {% endfor %}
+        </div>
     </body>
 </html>

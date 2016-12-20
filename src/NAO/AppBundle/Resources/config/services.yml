@@ -8,6 +8,10 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@form.factory"
             - "@session"
+            - "@mailer"
+            - "@templating"
+            - "@router"
+            - "@security.token_storage"
 
     nao_app.backoffice_manager:
         class: NAO\AppBundle\Service\BackOfficeManager

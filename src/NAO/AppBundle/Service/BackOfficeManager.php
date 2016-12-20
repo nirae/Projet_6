@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 
 class BackOfficeManager
 {
@@ -29,7 +30,7 @@ class BackOfficeManager
         Session $session,
         $passEncoder,
         \Swift_Mailer $mailer,
-        $templating
+        TwigEngine $templating
     )
     {
         $this->em = $em;
@@ -68,55 +69,5 @@ class BackOfficeManager
         return $form->createView();
     }
 
-    public function createUser(Request $request) {
 
-        $user = new User();
-        $form = $this->formfactory->create(AdminUserType::class, $user);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Ajouter les roles
-            $user->setRoles(array($user->getRole()));
-            // Générer le mot de passe
-            $generatedPass = uniqid('', true);
-            $user->setPlainPassword($generatedPass);
-            // Encoder le mot de passe
-            $password = $this->passEncoder->encodePassword(
-                $user,
-                $user->getPlainPassword()
-            );
-            // Hydrate l'entité avec le nouveau mdp encodé
-            $user->setPassword($password);
-            // Flush
-            $this->em->persist($user);
-            $this->em->flush();
-            // Flash Message
-            $this->session->getFlashBag()->add('notice', 'Utilisateur bien ajouté, il recevra un email contenant son mot de passe provisoire');
-
-            // Pseudo de l'admin
-            $admin = $this->security->getToken()->getUser();
-            // Envoyer mail de confirmation avec le mot de passe provisoire
-            $message = \Swift_Message::newInstance()
-            ->setSubject('Création de votre compte par ' . $admin->getUsername())
-            ->setFrom('nao@nicolasdubouilh.fr')
-            ->setTo($user->getEmail())
-            ->setBody(
-                $this->templating->render('NAOAppBundle:BackOffice:email.html.twig', array(
-                    'user' => $user,
-                    'admin' => $admin,
-                    'pass' => $generatedPass,
-                )),
-                'text/html'
-            )
-        ;
-        // Envoi du message
-        $this->mailer->send($message);
-            // Redirection
-            $response = new RedirectResponse('admin');
-            $response->send();
-        }
-
-        return $form->createView();
-    }
 }

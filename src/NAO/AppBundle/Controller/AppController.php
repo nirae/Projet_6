@@ -47,7 +47,7 @@ class AppController extends Controller
             ->getManager()
             ->getRepository("NAOAppBundle:Observation");
 
-        $waitingObs = $repository->findBy(array("status" => "En attente"));
+        $waitingObs = $repository->findBy(["status" => "En attente"]);
 
         // Reception AJAX
         // Formulaire html simple commentaire obligatoire + bouton valider ou refuser
@@ -75,9 +75,24 @@ class AppController extends Controller
     */
     public function adminAction(Request $request)
     {
-        // On génère un mot de passe temporaire et un mail est envoyé pour lui indiquer de le changer dans ses preferences
-        $form = $this->get('nao_app.backoffice_manager')->createUser($request);
+        $users = $this->get('nao_app.user_manager')->listUsers();
 
-        return array('form' => $form);
+        return array(
+            'users' => $users,
+        );
+    }
+
+    /**
+    * @Template("NAOAppBundle:BackOffice:admin-add.html.twig")
+    *
+    * @Security("has_role('ROLE_ADMIN')")
+    */
+    public function adminaddAction(Request $request) {
+        // On génère un mot de passe temporaire et un mail est envoyé pour lui indiquer de le changer dans ses preferences
+        $form = $this->get('nao_app.user_manager')->createUser($request);
+
+        return array(
+            'form' => $form,
+        );
     }
 }

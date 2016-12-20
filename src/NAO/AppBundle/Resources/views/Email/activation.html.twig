@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Confirmation de création de votre compte</title>
+    </head>
+    <body>
+        {% if admin is defined %}
+        <p>Votre compte a été crée par : {{ admin.username }}</p>
+        {% endif %}
+        pseudo : {{ user.username }}
+        {% if pass is defined %}
+        <p>
+            Votre mot de passe provisoire: {{ pass }} <br>
+            A changer dès votre premiere connexion
+        </p>
+        {% endif %}
+        <br>
+        lien de confirmation : <a href="{{ link }}">{{ link }}</a>
+    </body>
+</html>

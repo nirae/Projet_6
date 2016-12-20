@@ -28,4 +28,13 @@ class SecurityController extends Controller
 
         return array('form' => $form);
     }
+
+    /**
+    * @Template("NAOAppBundle:Security:confirmation.html.twig")
+    */
+    public function confirmationAccountAction($id, $username, $email)
+    {
+        $user = $this->get('nao_app.user_manager')->confirmation($id, $username, $email);
+        return array('user' => $user);
+    }
 }

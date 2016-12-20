@@ -21,6 +21,10 @@ nao_back_office_add:
     path:   /backoffice/ajouter
     defaults: { _controller: NAOAppBundle:App:add }
 
+nao_back_office_confirmation:
+    path:   /confirmation-compte/{id}-{username}-{email}
+    defaults: { _controller: NAOAppBundle:Security:confirmationAccount }
+
 nao_back_office_validations:
     path:   /backoffice/validations
     defaults: { _controller: NAOAppBundle:App:validations }
@@ -32,3 +36,7 @@ nao_back_office_account:
 nao_back_office_admin:
     path:   /backoffice/admin
     defaults: { _controller: NAOAppBundle:App:admin }
+
+nao_back_office_admin_add:
+    path:   /backoffice/admin-ajouter
+    defaults: { _controller: NAOAppBundle:App:adminadd }

@@ -5,6 +5,11 @@
     <title>Login</title>
 </head>
 <body>
+    {% for flash_message in app.session.flashBag.get('notice') %}
+        <div class="flash-notice">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
     <h1>Login</h1>
     {% if error %}
     <div class="alert alert-danger">{{ error.message }}</div>
