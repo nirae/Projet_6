@@ -19,13 +19,17 @@ class BackOfficeManager
     private $security;
     private $session;
     private $passEncoder;
+    private $mailer;
+    private $templating;
 
     public function __construct(
         EntityManager $em,
         FormFactory $formfactory,
         $security,
         Session $session,
-        $passEncoder
+        $passEncoder,
+        \Swift_Mailer $mailer,
+        $templating
     )
     {
         $this->em = $em;
@@ -33,6 +37,8 @@ class BackOfficeManager
         $this->security = $security;
         $this->session = $session;
         $this->passEncoder = $passEncoder;
+        $this->mailer = $mailer;
+        $this->templating = $templating;
     }
 
     public function add($request) {
@@ -73,7 +79,8 @@ class BackOfficeManager
             // Ajouter les roles
             $user->setRoles(array($user->getRole()));
             // Générer le mot de passe
-            $user->setPlainPassword(uniqid('', true));
+            $generatedPass = uniqid('', true);
+            $user->setPlainPassword($generatedPass);
             // Encoder le mot de passe
             $password = $this->passEncoder->encodePassword(
                 $user,
@@ -86,7 +93,25 @@ class BackOfficeManager
             $this->em->flush();
             // Flash Message
             $this->session->getFlashBag()->add('notice', 'Utilisateur bien ajouté, il recevra un email contenant son mot de passe provisoire');
+
+            // Pseudo de l'admin
+            $admin = $this->security->getToken()->getUser();
             // Envoyer mail de confirmation avec le mot de passe provisoire
+            $message = \Swift_Message::newInstance()
+            ->setSubject('Création de votre compte par ' . $admin->getUsername())
+            ->setFrom('nao@nicolasdubouilh.fr')
+            ->setTo($user->getEmail())
+            ->setBody(
+                $this->templating->render('NAOAppBundle:BackOffice:email.html.twig', array(
+                    'user' => $user,
+                    'admin' => $admin,
+                    'pass' => $generatedPass,
+                )),
+                'text/html'
+            )
+        ;
+        // Envoi du message
+        $this->mailer->send($message);
             // Redirection
             $response = new RedirectResponse('admin');
             $response->send();
