@@ -29,6 +29,10 @@ nao_back_office_validations:
     path:   /backoffice/validations
     defaults: { _controller: NAOAppBundle:App:validations }
 
+nao_back_office_post_validations:
+    path:   /backoffice/validations/{id}
+    defaults: { _controller: NAOAppBundle:App:postValidations }
+
 nao_back_office_account:
     path:   /backoffice/mon-compte
     defaults: { _controller: NAOAppBundle:App:account }

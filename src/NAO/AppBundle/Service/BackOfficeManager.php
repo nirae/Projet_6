@@ -12,6 +12,7 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bundle\TwigBundle\TwigEngine;
+use NAO\AppBundle\Form\ValidationsType;
 
 class BackOfficeManager
 {
@@ -42,7 +43,7 @@ class BackOfficeManager
         $this->templating = $templating;
     }
 
-    public function add($request) {
+    public function add(Request $request) {
         $obs = new Observation();
         $form = $this->formfactory->create(ObservationType::class, $obs);
 
@@ -52,6 +53,11 @@ class BackOfficeManager
         if ($form->isSubmitted() && $form->isValid()) {
             // Si il y a bien un utilisateur connecté
             if ($user !== null) {
+
+                // Si l'user à ROLE_NATUR, l'obs est validée directement
+                if ($user->getRoles() == array('ROLE_NATUR') || $user->getRoles() == array('ROLE_ADMIN')) {
+                    $obs->setStatus("Validée");
+                }
 
                 $obs->setOwner($user);
                 $user->addObservation($obs);
@@ -69,5 +75,48 @@ class BackOfficeManager
         return $form->createView();
     }
 
+    public function validations(Request $request) {
+
+        $repository = $this->em->getRepository("NAOAppBundle:Observation");
+        $waitingObs = $repository->findBy(["status" => "En attente"]);
+
+        $forms = array();
+        // Tableau de formulaires
+        // Chaque formulaire a comme clé l'id de l'observation qu'il concerne
+        foreach ($waitingObs as $obs) {
+
+            $form = $this->formfactory->create(ValidationsType::class, $obs);
+            $forms[$obs->getId()] = $form->createView();
+        }
+
+        return array(
+            'forms' => $forms,
+            'observations' => $waitingObs,
+        );
+    }
+
+    public function postValidations($id, $request) {
+        // Récupère l'observation correspondante à l'id
+        $repository = $this->em->getRepository("NAOAppBundle:Observation");
+        $obs = $repository->find($id);
+        // Création du formulaire
+        $form = $this->formfactory->create(ValidationsType::class, $obs);
+        $form->handleRequest($request);
+        // Si le formulaire est soumis et valide
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Flush
+            $this->em->persist($obs);
+            $this->em->flush();
+            // Flash Message
+            $this->session->getFlashBag()->add('notice', 'Validation bien ajoutée');
+            // Envoi email a l'user
+            // Redirection
+            $response = new RedirectResponse('/backoffice/validations');
+            $response->send();
+        }
+        // Redirige quand meme si le lien n'est pas bon
+        $response = new RedirectResponse('/backoffice/validations');
+        $response->send();
+    }
 
 }

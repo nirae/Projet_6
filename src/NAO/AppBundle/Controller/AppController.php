@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+
 class AppController extends Controller
 {
     /**
@@ -40,24 +41,21 @@ class AppController extends Controller
     *
     * @Security("has_role('ROLE_NATUR')")
     */
-    public function validationsAction()
+    public function validationsAction(Request $request)
     {
-        $repository = $this
-            ->getDoctrine()
-            ->getManager()
-            ->getRepository("NAOAppBundle:Observation");
 
-        $waitingObs = $repository->findBy(["status" => "En attente"]);
+        return $this->get('nao_app.backoffice_manager')->validations($request);
+    }
 
-        // Reception AJAX
-        // Formulaire html simple commentaire obligatoire + bouton valider ou refuser
-        // Le clic sur un des boutons enregistre une data "validée" ou "refusée"
-        // Change le statut en back
-        // Envoi en AJAX des données puis réponse OK qui supprime l'observation de la liste
+    /**
+     * @Template("NAOAppBundle:BackOffice:postvalidations.html.twig")
+     * @Security("has_role('ROLE_NATUR')")
+     */
+    public function postValidationsAction($id, Request $request) {
 
-        return array(
-            "observations" => $waitingObs,
-        );
+        $this->get('nao_app.backoffice_manager')->postValidations($id, $request);
+
+        return;
     }
 
     /**
@@ -65,6 +63,9 @@ class AppController extends Controller
     */
     public function accountAction($request)
     {
+        // Changer les infos
+
+
         return array();
     }
 
@@ -88,7 +89,7 @@ class AppController extends Controller
     * @Security("has_role('ROLE_ADMIN')")
     */
     public function adminaddAction(Request $request) {
-        // On génère un mot de passe temporaire et un mail est envoyé pour lui indiquer de le changer dans ses preferences
+
         $form = $this->get('nao_app.user_manager')->createUser($request);
 
         return array(

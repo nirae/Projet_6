@@ -16,6 +16,9 @@
             {% if obs.image %}
                 <img src="/{{ obs.image.webPath }}" alt="{{ obs.image.alt }}" width="150px"/>
             {% endif %}
+            {{ form_start(attribute(forms, obs.id), {'action': path('nao_back_office_post_validations', {'id': obs.id}), 'method': 'POST'}) }}
+            {{ form_errors(attribute(forms, obs.id)) }}
+            {{ form_end(attribute(forms, obs.id)) }}
         {% endfor %}
     </body>
 </html>
