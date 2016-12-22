@@ -5,6 +5,18 @@
         <title>Account</title>
     </head>
     <body>
+        {% for flash_message in app.session.flashBag.get('notice') %}
+            <div class="flash-notice">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
         <h1>Account</h1>
+        {{ form_start(infosform, {'action': path('nao_back_office_post_usermodif'), 'method': 'POST'}) }}
+        {{ form_errors(infosform) }}
+        {{ form_end(infosform) }}
+
+        {{ form_start(passform, {'action': path('nao_back_office_post_passmodif'), 'method': 'POST'}) }}
+        {{ form_errors(passform) }}
+        {{ form_end(passform) }}
     </body>
 </html>

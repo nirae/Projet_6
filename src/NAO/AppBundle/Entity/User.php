@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 
 /**
 * User
@@ -30,6 +31,14 @@ class User implements AdvancedUserInterface, \Serializable
     * @Assert\NotBlank()
     */
     private $username;
+
+    /**
+    * @SecurityAssert\UserPassword(
+    *     groups = {"registration"},
+    *     message = "Mauvais mot de passe"
+    * )
+    */
+    private $oldPassword;
 
     /**
      * Mot de passe en clair. NE PAS FLUSHER
@@ -297,14 +306,30 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     public function setIsActive($isActive) {
+
         $this->isActive = $isActive;
     }
 
     public function activate() {
+
         $this->isActive = true;
     }
 
     public function disable() {
+
         $this->isActive = false;
     }
+
+    public function getOldPassword() {
+
+        return $this->oldPassword;
+    }
+
+    public function setOldPassword($oldPassword) {
+
+        $this->oldPassword = $oldPassword;
+
+        return $this;
+    }
+
 }

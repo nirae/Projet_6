@@ -110,6 +110,18 @@ class BackOfficeManager
             // Flash Message
             $this->session->getFlashBag()->add('notice', 'Validation bien ajoutée');
             // Envoi email a l'user
+            $message = \Swift_Message::newInstance()
+            ->setSubject('Votre observation a été ' . $obs->getStatus())
+            ->setFrom('nao@nicolasdubouilh.fr')
+            ->setTo($obs->getOwner()->getEmail())
+            ->setBody(
+                $this->templating->render('NAOAppBundle:Email:validationobs.html.twig', array(
+                    'obs' => $obs,
+                )),
+                'text/html'
+            );
+            // Envoi du message
+            $this->mailer->send($message);
             // Redirection
             $response = new RedirectResponse('/backoffice/validations');
             $response->send();

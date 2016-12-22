@@ -5,6 +5,8 @@ namespace NAO\AppBundle\Service;
 use NAO\AppBundle\Form\UserType;
 use NAO\AppBundle\Entity\User;
 use NAO\AppBundle\Form\AdminUserType;
+use NAO\AppBundle\Form\ModifUserType;
+use NAO\AppBundle\Form\ModifPasswordType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -256,5 +258,101 @@ class UserManager
             // Redirection
             return $user;
         }
+    }
+
+    public function modifUser()
+    {
+        $user = $this->security->getToken()->getUser();
+        $form = $this->formfactory->create(ModifUserType::class, $user);
+        return $form->createView();
+    }
+
+    public function postModifUser(Request $request)
+    {
+        $user = $this->security->getToken()->getUser();
+        $form = $this->formfactory->create(ModifUserType::class, $user);
+        $form->handleRequest($request);
+        $this->em->persist($user);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Flush
+            $this->em->persist($user);
+            $this->em->flush();
+            // Flash Message
+            $this->session->getFlashBag()->add('notice', 'Modification effectuée');
+            // Envoi email a l'user
+            $message = \Swift_Message::newInstance()
+            ->setSubject('Les modifications de vos informations ont bien été prises en compte')
+            ->setFrom('nao@nicolasdubouilh.fr')
+            ->setTo($user->getEmail())
+            ->setBody(
+                $this->templating->render('NAOAppBundle:Email:modifscompte.html.twig', array(
+                    'user' => $user,
+                )),
+                'text/html'
+            );
+            // Envoi du message
+            $this->mailer->send($message);
+            // Redirection
+            $response = new RedirectResponse('/backoffice/mon-compte');
+            $response->send();
+        }
+        // Flash Message
+        $this->session->getFlashBag()->add('notice', 'Erreur');
+        // Redirige quand meme en cas d'erreur
+        $response = new RedirectResponse('/backoffice/mon-compte');
+        $response->send();
+
+    }
+
+    public function modifPass()
+    {
+        $user = $this->security->getToken()->getUser();
+        $form = $this->formfactory->create(ModifPasswordType::class, $user);
+        return $form->createView();
+    }
+
+    public function postModifPass(Request $request)
+    {
+        $user = $this->security->getToken()->getUser();
+        $form = $this->formfactory->create(ModifPasswordType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Encoder le mot de passe
+            $password = $this->passEncoder->encodePassword(
+                $user,
+                $user->getPlainPassword()
+            );
+            // Hydrate l'entité avec le nouveau mdp encodé
+            $user->setPassword($password);
+            // Flush
+            $this->em->persist($user);
+            $this->em->flush();
+            // Flash Message
+            $this->session->getFlashBag()->add('notice', 'Modification effectuée');
+            // Envoi email a l'user
+            $message = \Swift_Message::newInstance()
+            ->setSubject('Les modifications de vos informations ont bien été prises en compte')
+            ->setFrom('nao@nicolasdubouilh.fr')
+            ->setTo($user->getEmail())
+            ->setBody(
+                $this->templating->render('NAOAppBundle:Email:modifscompte.html.twig', array(
+                    'user' => $user,
+                )),
+                'text/html'
+            );
+            // Envoi du message
+            $this->mailer->send($message);
+            // Redirection
+            $response = new RedirectResponse('/backoffice/mon-compte');
+            $response->send();
+        }
+        // Flash Message
+        $this->session->getFlashBag()->add('notice', 'Erreur');
+        // Redirige quand meme en cas d'erreur
+        $response = new RedirectResponse('/backoffice/mon-compte');
+        $response->send();
+
     }
 }

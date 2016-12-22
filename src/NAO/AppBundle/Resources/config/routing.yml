@@ -37,10 +37,18 @@ nao_back_office_account:
     path:   /backoffice/mon-compte
     defaults: { _controller: NAOAppBundle:App:account }
 
+nao_back_office_post_passmodif:
+    path:   /backoffice/mon-compte/modifpass
+    defaults: { _controller: NAOAppBundle:App:postModifPassword }
+
+nao_back_office_post_usermodif:
+    path:   /backoffice/mon-compte/modifinfo
+    defaults: { _controller: NAOAppBundle:App:postModifAccount }
+
 nao_back_office_admin:
     path:   /backoffice/admin
     defaults: { _controller: NAOAppBundle:App:admin }
 
 nao_back_office_admin_add:
     path:   /backoffice/admin-ajouter
-    defaults: { _controller: NAOAppBundle:App:adminadd }
+    defaults: { _controller: NAOAppBundle:App:adminAdd }

@@ -48,7 +48,6 @@ class AppController extends Controller
     }
 
     /**
-     * @Template("NAOAppBundle:BackOffice:postvalidations.html.twig")
      * @Security("has_role('ROLE_NATUR')")
      */
     public function postValidationsAction($id, Request $request) {
@@ -61,12 +60,36 @@ class AppController extends Controller
     /**
     * @Template("NAOAppBundle:BackOffice:account.html.twig")
     */
-    public function accountAction($request)
+    public function accountAction(Request $request)
     {
         // Changer les infos
+        $infosForm = $this->get('nao_app.user_manager')->modifUser();
+        // Changer le mot de passe
+        $newpassForm = $this->get('nao_app.user_manager')->modifPass();
+        return array(
+            'infosform' => $infosForm,
+            'passform' => $newpassForm,
+        );
+    }
 
+    /**
+    * @Template("NAOAppBundle:BackOffice:post.html.twig")
+    */
+    public function postModifPasswordAction(Request $request)
+    {
+        $this->get('nao_app.user_manager')->postModifPass($request);
 
-        return array();
+        return;
+    }
+
+    /**
+    * @Template("NAOAppBundle:BackOffice:post.html.twig")
+    */
+    public function postModifAccountAction(Request $request)
+    {
+        $this->get('nao_app.user_manager')->postModifUser($request);
+
+        return;
     }
 
     /**
@@ -88,7 +111,7 @@ class AppController extends Controller
     *
     * @Security("has_role('ROLE_ADMIN')")
     */
-    public function adminaddAction(Request $request) {
+    public function adminAddAction(Request $request) {
 
         $form = $this->get('nao_app.user_manager')->createUser($request);
 
