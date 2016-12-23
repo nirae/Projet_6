@@ -3,6 +3,7 @@
 namespace NAO\AppBundle\Service;
 
 use NAO\AppBundle\Entity\Observation;
+use NAO\AppBundle\Form\Model\Index;
 use NAO\AppBundle\Form\ObservationType;
 use NAO\AppBundle\Entity\User;
 use NAO\AppBundle\Form\AdminUserType;
@@ -13,6 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use NAO\AppBundle\Form\ValidationsType;
+use NAO\AppBundle\Form\IndexType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class BackOfficeManager
 {
@@ -43,7 +46,53 @@ class BackOfficeManager
         $this->templating = $templating;
     }
 
-    public function add(Request $request) {
+    public function index(Request $request)
+    {
+        $index = new Index();
+        $form = $this->formfactory->create(IndexType::class, $index);
+
+        return $form->createView();
+    }
+
+    public function postIndex(Request $request)
+    {
+        if ($request->isMethod('POST')) {
+
+            $speciesId = $request->get('id');
+            //Récupère les observations correspondantes
+            $repository = $this->em->getRepository('NAOAppBundle:Observation');
+            $observations = $repository->findBy(
+                array(
+                    'species' => $speciesId,
+                    'status' => 'Validée'
+                )
+            );
+
+            // Si il n'y a pas d'observations
+            if (count($observations) === 0) {
+                return new JsonResponse(array(
+                    'response' => false,
+                ));
+            }
+
+            $listObservations = array();
+            foreach ($observations as $obs) {
+                $listObservations[] = array(
+                    'id' => $obs->getId(),
+                    'owner' => $obs->getOwner()->getUsername(),
+                    'latitude' => $obs->getLatitude(),
+                    'longitude' => $obs->getLatitude(),
+                );
+            }
+
+            return new JsonResponse(array(
+                'response' => $listObservations,
+            ));
+        }
+    }
+
+    public function add(Request $request)
+    {
         $obs = new Observation();
         $form = $this->formfactory->create(ObservationType::class, $obs);
 

@@ -1,17 +1,92 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Accueil</title>
-    </head>
-    <body>
-        <h1>Accueil</h1>
-        <a href="/backoffice/ajouter">Ajouter une observation</a>
-        <a href="/login">Connexion</a>
-        <a href="/register">Inscription</a>
-        <a href="/backoffice/mes-observations">Mes Observations</a>
-        <a href="/backoffice/validations">Validation des observations</a>
-        <a href="/backoffice/mon-compte">Mon Compte</a>
-        <a href="/backoffice/admin">Administration</a>
-    </body>
+<head>
+    <meta charset="utf-8">
+    <title>Accueil</title>
+    <style type="text/css">
+  html, body { height: 100%; margin: 0; padding: 0; }
+  #map { height: 80%; }
+</style>
+</head>
+<body>
+    {% for flash_message in app.session.flashBag.get('notice') %}
+    <div class="flash-notice">
+        {{ flash_message }}
+    </div>
+    {% endfor %}
+    <h1>Accueil</h1>
+    <a href="/backoffice/ajouter">Ajouter une observation</a>
+    <a href="/login">Connexion</a>
+    <a href="/register">Inscription</a>
+    <a href="/backoffice/mes-observations">Mes Observations</a>
+    <a href="/backoffice/validations">Validation des observations</a>
+    <a href="/backoffice/mon-compte">Mon Compte</a>
+    <a href="/backoffice/admin">Administration</a>
+    <br>
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    {{ form_end(form) }}
+    <div id="map"></div>
+    <script
+    src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"></script>
+    <script type="text/javascript">
+
+    document.querySelector("#nao_appbundle_user_species").addEventListener("change", function(e) {
+        $.post('{{ path("nao_app_ajax_homepage") }}',
+        {id: e.target.value },
+        function(reponse) {
+            if (reponse.response === false) {
+                console.log(reponse.response + " Fail");
+            } else {
+
+                console.log(reponse.response);
+            }
+        }, "json");
+    });
+
+    /*function latlng() {
+        var LatLng;
+        if ("geolocation" in navigator)  {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                return {lat: parseInt(position.coords.latitude), lng: parseInt(position.coords.longitude)};
+            });
+        } else {
+            return {lat: 48.862725, lng: 2.28759};
+        }
+    }*/
+
+    var map;
+    function initMap() {
+
+        var map = new google.maps.Map(document.querySelector('#map'), {
+            center: {lat: 48.862725, lng: 2.28759},
+            scrollwheel: false,
+            zoom: 7
+        });
+
+        document.querySelector("#nao_appbundle_user_species").addEventListener("change", function(e) {
+            $.post('{{ path("nao_app_ajax_homepage") }}',
+            {id: e.target.value },
+            function(reponse) {
+                if (reponse.response === false) {
+                    console.log(reponse.response + " Fail");
+                } else {
+                    reponse.response.forEach(function(e) {
+                        var marker = new google.maps.Marker({
+                            position: {lat: parseInt(e.latitude), lng: parseInt(e.longitude)},
+                            map: map,
+                            title: e.id.toString()
+                        });
+                    });
+                }
+            }, "json");
+        });
+    }
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9seytk1giw2EFp4XLJo17y5H-jiDvrcI&callback=initMap"
+        async defer></script>
+</body>
 </html>

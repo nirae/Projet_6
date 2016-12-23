@@ -13,9 +13,16 @@ class AppController extends Controller
     /**
     * @Template("NAOAppBundle:App:index.html.twig")
     */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        return array();
+        $form = $this->get('nao_app.backoffice_manager')->index($request);
+
+        return array('form' => $form);
+    }
+
+    public function ajaxIndexAction(Request $request)
+    {
+        return $this->get('nao_app.backoffice_manager')->postIndex($request);
     }
 
     /**
@@ -43,7 +50,6 @@ class AppController extends Controller
     */
     public function validationsAction(Request $request)
     {
-
         return $this->get('nao_app.backoffice_manager')->validations($request);
     }
 
@@ -72,9 +78,6 @@ class AppController extends Controller
         );
     }
 
-    /**
-    * @Template("NAOAppBundle:BackOffice:post.html.twig")
-    */
     public function postModifPasswordAction(Request $request)
     {
         $this->get('nao_app.user_manager')->postModifPass($request);
@@ -82,9 +85,6 @@ class AppController extends Controller
         return;
     }
 
-    /**
-    * @Template("NAOAppBundle:BackOffice:post.html.twig")
-    */
     public function postModifAccountAction(Request $request)
     {
         $this->get('nao_app.user_manager')->postModifUser($request);

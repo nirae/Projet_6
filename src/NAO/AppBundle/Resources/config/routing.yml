@@ -2,6 +2,10 @@ nao_app_homepage:
     path:     /
     defaults: { _controller: NAOAppBundle:App:index }
 
+nao_app_ajax_homepage:
+    path:     /post
+    defaults: { _controller: NAOAppBundle:App:ajaxIndex }
+
 login:
     path: /login
     defaults: { _controller: NAOAppBundle:Security:login }
