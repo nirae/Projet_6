@@ -30,7 +30,7 @@ class AppController extends Controller
     */
     public function observationsAction()
     {
-        return array();
+        return;
     }
 
     /**

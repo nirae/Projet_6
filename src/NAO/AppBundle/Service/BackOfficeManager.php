@@ -57,16 +57,27 @@ class BackOfficeManager
     public function postIndex(Request $request)
     {
         if ($request->isMethod('POST')) {
-
+            // Récupère l'id envoyé via ajax
             $speciesId = $request->get('id');
+
             //Récupère les observations correspondantes
             $repository = $this->em->getRepository('NAOAppBundle:Observation');
-            $observations = $repository->findBy(
-                array(
-                    'species' => $speciesId,
-                    'status' => 'Validée'
-                )
-            );
+            // Si l'id = all on récupère tout
+            // Sinon que les observations concernant l'id choisi
+            if ($speciesId === "all") {
+                $observations = $repository->findBy(
+                    array(
+                        'status' => 'Validée'
+                    )
+                );
+            } else {
+                $observations = $repository->findBy(
+                    array(
+                        'species' => $speciesId,
+                        'status' => 'Validée'
+                    )
+                );
+            }
 
             // Si il n'y a pas d'observations
             if (count($observations) === 0) {
@@ -81,7 +92,7 @@ class BackOfficeManager
                     'id' => $obs->getId(),
                     'owner' => $obs->getOwner()->getUsername(),
                     'latitude' => $obs->getLatitude(),
-                    'longitude' => $obs->getLatitude(),
+                    'longitude' => $obs->getLongitude(),
                 );
             }
 

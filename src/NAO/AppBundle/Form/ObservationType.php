@@ -22,7 +22,7 @@ class ObservationType extends AbstractType
         $builder
             ->add('date', DateType::class, array(
                 'format' => 'dd-MM-yyyy',
-                'label' => 'Jour de la visite',
+                'label' => 'Jour de l\'observation',
             ))
             ->add('latitude', TextType::class)
             ->add('longitude', TextType::class)

@@ -3,11 +3,89 @@
 <head>
     <meta charset="utf-8">
     <title>Ajouter</title>
+    <style type="text/css">
+  html, body { height: 100%; margin: 0; padding: 0; }
+  #map { height: 50%; width: 50%;}
+</style>
 </head>
 <body>
+    <div id="map"></div>
+    <button type="button" id="geoloc" name="geoloc">Me Géolocaliser</button>
+    <p id="error"></p>
     <h1>Ajouter</h1>
     {{ form_start(form) }}
     {{ form_errors(form) }}
     {{ form_end(form) }}
+
+    <script
+    src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"></script>
+    <script type="text/javascript">
+
+    function initMap() {
+
+        var lat = document.querySelector('#nao_appbundle_observation_latitude');
+        var long = document.querySelector('#nao_appbundle_observation_longitude');
+
+        var map = new google.maps.Map(document.querySelector('#map'), {
+            center: {lat: 48.862725, lng: 2.28759},
+            scrollwheel: false,
+            zoom: 6
+        });
+
+        var marker = new google.maps.Marker({
+            map: map,
+            draggable: true,
+            animation: google.maps.Animation.DROP,
+        });
+
+        marker.addListener('dragend', function(e) {
+            lat.value = e.latLng.lat();
+            long.value = e.latLng.lng();
+        });
+
+        // Ajoute un marqueur si clic sur la map
+        map.addListener('click', function(e) {
+
+            setPos({lat: e.latLng.lat(), lng: e.latLng.lng()});
+            lat.value = e.latLng.lat();
+            long.value = e.latLng.lng();
+        });
+
+        // Si clic sur le bouton de geoloc
+        document.querySelector("#geoloc").addEventListener("click", function(e) {
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(function(pos) {
+                    lat.value = pos.coords.latitude;
+                    long.value = pos.coords.longitude;
+                    setPos({lat: pos.coords.latitude, lng: pos.coords.longitude});
+                });
+            } else {
+                document.querySelector('#error').textContent = "Erreur lors de la géolocalisation";
+            }
+        });
+
+        // Si un des inputs de localisations sont modifiés
+        var latitude = document.querySelector("#nao_appbundle_observation_latitude");
+        latitude.addEventListener("input", function(e) {
+            setPos({lat: parseFloat(lat.value), lng: parseFloat(long.value)});
+        });
+
+        var longitude = document.querySelector("#nao_appbundle_observation_longitude");
+        longitude.addEventListener("input", function(e) {
+            setPos({lat: parseFloat(lat.value), lng: parseFloat(long.value)});
+        });
+
+        function setPos(location) {
+            marker.setPosition(location);
+            map.setCenter(location);
+            map.setZoom(9);
+        }
+    }
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9seytk1giw2EFp4XLJo17y5H-jiDvrcI&callback=initMap"
+        async defer></script>
 </body>
 </html>

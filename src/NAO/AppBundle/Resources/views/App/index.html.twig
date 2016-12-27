@@ -33,56 +33,93 @@
     crossorigin="anonymous"></script>
     <script type="text/javascript">
 
-    document.querySelector("#nao_appbundle_user_species").addEventListener("change", function(e) {
-        $.post('{{ path("nao_app_ajax_homepage") }}',
-        {id: e.target.value },
-        function(reponse) {
-            if (reponse.response === false) {
-                console.log(reponse.response + " Fail");
-            } else {
-
-                console.log(reponse.response);
-            }
-        }, "json");
-    });
-
-    /*function latlng() {
-        var LatLng;
-        if ("geolocation" in navigator)  {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                return {lat: parseInt(position.coords.latitude), lng: parseInt(position.coords.longitude)};
-            });
-        } else {
-            return {lat: 48.862725, lng: 2.28759};
-        }
-    }*/
-
     var map;
+    var markers = [];
+    var infos = [];
+
     function initMap() {
 
         var map = new google.maps.Map(document.querySelector('#map'), {
-            center: {lat: 48.862725, lng: 2.28759},
+            center: {lat: 46.46813299215553, lng: 2.57080078125},
             scrollwheel: false,
-            zoom: 7
+            zoom: 6
         });
 
+        // Au chargement de la page
+        $.post('{{ path("nao_app_ajax_homepage") }}',
+        {id: 'all' },
+        function(rep) {
+            if (rep.response === false) {
+                deleteMarkers();
+                console.log(rep.response + " Fail");
+            } else {
+                deleteMarkers();
+                for (var i = 0; i < rep.response.length; i++) {
+                    addMarker(
+                        {lat: parseFloat(rep.response[i].latitude), lng: parseFloat(rep.response[i].longitude)},
+                        rep.response[i].owner
+                    );
+                }
+            }
+        }, "json");
+
+        // Si le formulaire change
         document.querySelector("#nao_appbundle_user_species").addEventListener("change", function(e) {
             $.post('{{ path("nao_app_ajax_homepage") }}',
             {id: e.target.value },
-            function(reponse) {
-                if (reponse.response === false) {
-                    console.log(reponse.response + " Fail");
+            function(rep) {
+                if (rep.response === false) {
+                    deleteMarkers();
+                    // Ajouter un message
+                    console.log(rep.response + " Fail");
                 } else {
-                    reponse.response.forEach(function(e) {
-                        var marker = new google.maps.Marker({
-                            position: {lat: parseInt(e.latitude), lng: parseInt(e.longitude)},
-                            map: map,
-                            title: e.id.toString()
-                        });
-                    });
+                    deleteMarkers();
+                    for (var i = 0; i < rep.response.length; i++) {
+                        addMarker(
+                            {lat: parseFloat(rep.response[i].latitude),lng: parseFloat(rep.response[i].longitude)},
+                            rep.response[i].owner
+                        );
+                    }
                 }
             }, "json");
         });
+
+        function addMarker(location, owner) {
+            var marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                animation: google.maps.Animation.DROP
+            });
+            markers.push(marker);
+            var infowindow = new google.maps.InfoWindow({
+                content: owner,
+            });
+            marker.addListener('click', function() {
+                infowindow.open(map, marker);
+            });
+            infos.push(infowindow);
+        }
+
+        function setMapOnAll(map) {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(map);
+            }
+        }
+
+        function showMarkers() {
+          setMapOnAll(map);
+        }
+        // Cache les markers
+        function clearMarkers() {
+            setMapOnAll(null);
+        }
+
+        // Supprime tous les markers
+        function deleteMarkers() {
+            clearMarkers();
+            markers = [];
+            console.log("delete");
+        }
     }
 
     </script>
