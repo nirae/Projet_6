@@ -345,3 +345,31 @@ Validations
 .bloc-form .btn {
     width: 100%;
 }
+/*******************************************
+Validations
+*******************************************/
+#map-add {
+    height: 400px;
+}
+
+.add-form .row{
+    margin: 20px 0px;
+}
+
+#geoloc {
+    margin-top: 22px;
+}
+
+.bloc-loc {
+    background: #fff;
+    padding: 20px;
+    margin: 10px 15px;
+}
+
+.bloc-loc p {
+    margin-bottom: 15px;
+}
+
+.fa-map-marker {
+    margin-right: 10px;
+}

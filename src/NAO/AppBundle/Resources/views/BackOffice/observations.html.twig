@@ -160,6 +160,12 @@
                             </div>
                         </div>
                         {% endif %}
+                        {% else %}
+                        <div class="row">
+                            <div class="col-sm-12 bloc-validation">
+                                <p><strong>Votre observation est {{ obs.status|lower }} de validation. Patience!</strong></p>
+                            </div>
+                        </div>
                         {% endif %}
                     </div>
                 </div>
@@ -189,15 +195,8 @@ function initMap() {
         var parent = e.parentNode;
         var childs = parent.childNodes;
 
-        var lat = parseFloat(childs[1].innerHTML);
-        var lng = parseFloat(childs[3].innerHTML);
-
-        if (isNaN(lat)) {
-            lat = 40;
-        }
-        if (isNaN(lng)) {
-            lng = 2;
-        }
+        var lat = parseFloat(childs[3].innerHTML);
+        var lng = parseFloat(childs[5].innerHTML);
 
         var map = new google.maps.Map(e, {
             center: {lat: lat, lng: lng},

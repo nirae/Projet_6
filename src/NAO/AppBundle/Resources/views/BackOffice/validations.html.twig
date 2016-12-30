@@ -135,15 +135,10 @@ function initMap() {
         var parent = e.parentNode;
         var childs = parent.childNodes;
 
-        var lat = parseFloat(childs[1].innerHTML);
-        var lng = parseFloat(childs[3].innerHTML);
-
-        if (isNaN(lat)) {
-            lat = 40;
-        }
-        if (isNaN(lng)) {
-            lng = 2;
-        }
+        var lat = parseFloat(childs[3].innerHTML);
+        var lng = parseFloat(childs[5].innerHTML);
+        console.log(lat);
+        console.log(lng);
 
         var map = new google.maps.Map(e, {
             center: {lat: lat, lng: lng},

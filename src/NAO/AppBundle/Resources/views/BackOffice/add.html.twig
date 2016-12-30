@@ -1,91 +1,168 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Ajouter</title>
-    <style type="text/css">
-  html, body { height: 100%; margin: 0; padding: 0; }
-  #map { height: 50%; width: 50%;}
-</style>
-</head>
-<body>
-    <div id="map"></div>
-    <button type="button" id="geoloc" name="geoloc">Me Géolocaliser</button>
-    <p id="error"></p>
-    <h1>Ajouter</h1>
-    {{ form_start(form) }}
-    {{ form_errors(form) }}
-    {{ form_end(form) }}
+{% extends 'NAOAppBundle:BackOffice:layout.html.twig' %}
+{% block title %}{{ parent() }} Ajouter{% endblock %}
+{% block contenu %}
+<div class="container bloc-back">
+    {% for flash_message in app.session.flashBag.get('notice') %}
+        <div class="alert alert-info flash-notice">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
 
-    <script
-    src="https://code.jquery.com/jquery-3.1.1.min.js"
-    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-    crossorigin="anonymous"></script>
-    <script type="text/javascript">
+    <div id="error" class="alert alert-danger text-center" style="display: none">
+        Erreur lors de la géolocalisation. Réessayez en actualisant la page ou choisissez votre position manuellement.
+    </div>
+    <h1 class="text-center">Merci de contribuer !</h1>
+    <div class="bloc-form add-form">
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                {{ form_label(form.date) }}
+                {{ form_errors(form.date) }}
+                {{ form_widget(form.date) }}
+            </div>
 
-    function initMap() {
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                {{ form_label(form.species) }}
+                {{ form_errors(form.species) }}
+                {{ form_widget(form.species) }}
+            </div>
+        </div>
+        <div class="bloc-loc">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="alert alert-info">
+                        <p>
+                            Vous pouvez <strong>entrer les coordonnées</strong> directement dans le formulaire ou bien
+                            <strong>cliquer sur la position</strong> souhaitée
+                            sur la carte. Vous pouvez affiner votre choix en zoomant et en déplaçant le marqueur représentant la position.
+                        </p>
+                        <p>
+                            <strong>Si vous le souhaitez, il est possible de vous géolocaliser en cliquant sur le bouton prévu à cet effet.</strong>
+                            En cas de position incorrect, vous pouvez ajuster le marqueur directement sur la carte en le déplaçant.
+                        </p>
+                        <p>
+                            <span class="fa fa-exclamation-triangle"></span> Votre position est uniquement utilisée pour définir l'emplacement de votre observation
+                            et la géolocalisation est active seulement en cas de clic sur le bouton.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-sm-12">
+                    {{ form_label(form.latitude) }}
+                    {{ form_errors(form.latitude) }}
+                    {{ form_widget(form.latitude) }}
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    {{ form_label(form.longitude) }}
+                    {{ form_errors(form.longitude) }}
+                    {{ form_widget(form.longitude) }}
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <button type="button" id="geoloc" class="btn btn-default bouton-fonce" name="geoloc">
+                        <span class="fa fa-map-marker fa-lg"></span>
+                        Me Géolocaliser
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <div id="map-add"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                {{ form_label(form.image) }}
+                {{ form_errors(form.image) }}
+                {{ form_widget(form.image) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                {{ form_label(form.userMessage) }}
+                {{ form_errors(form.userMessage) }}
+                {{ form_widget(form.userMessage) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <input type="submit" id="nao_appbundle_observation_save" class="bouton-fonce btn btn-default" value="Valider">
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
 
-        var lat = document.querySelector('#nao_appbundle_observation_latitude');
-        var long = document.querySelector('#nao_appbundle_observation_longitude');
+</div>
+<script type="text/javascript">
 
-        var map = new google.maps.Map(document.querySelector('#map'), {
-            center: {lat: 48.862725, lng: 2.28759},
-            scrollwheel: false,
-            zoom: 6
-        });
+function initMap() {
 
-        var marker = new google.maps.Marker({
-            map: map,
-            draggable: true,
-            animation: google.maps.Animation.DROP,
-        });
+    var lat = document.querySelector('#nao_appbundle_observation_latitude');
+    var long = document.querySelector('#nao_appbundle_observation_longitude');
 
-        marker.addListener('dragend', function(e) {
-            lat.value = e.latLng.lat();
-            long.value = e.latLng.lng();
-        });
+    var map = new google.maps.Map(document.querySelector('#map-add'), {
+        center: {lat: 48.862725, lng: 2.28759},
+        scrollwheel: false,
+        zoom: 6
+    });
 
-        // Ajoute un marqueur si clic sur la map
-        map.addListener('click', function(e) {
+    var marker = new google.maps.Marker({
+        map: map,
+        draggable: true,
+        animation: google.maps.Animation.DROP,
+    });
 
-            setPos({lat: e.latLng.lat(), lng: e.latLng.lng()});
-            lat.value = e.latLng.lat();
-            long.value = e.latLng.lng();
-        });
+    marker.addListener('dragend', function(e) {
+        lat.value = e.latLng.lat();
+        long.value = e.latLng.lng();
+    });
 
-        // Si clic sur le bouton de geoloc
-        document.querySelector("#geoloc").addEventListener("click", function(e) {
-            if ('geolocation' in navigator) {
-                navigator.geolocation.getCurrentPosition(function(pos) {
-                    lat.value = pos.coords.latitude;
-                    long.value = pos.coords.longitude;
-                    setPos({lat: pos.coords.latitude, lng: pos.coords.longitude});
-                });
-            } else {
-                document.querySelector('#error').textContent = "Erreur lors de la géolocalisation";
-            }
-        });
+    // Ajoute un marqueur si clic sur la map
+    map.addListener('click', function(e) {
 
-        // Si un des inputs de localisations sont modifiés
-        var latitude = document.querySelector("#nao_appbundle_observation_latitude");
-        latitude.addEventListener("input", function(e) {
-            setPos({lat: parseFloat(lat.value), lng: parseFloat(long.value)});
-        });
+        setPos({lat: e.latLng.lat(), lng: e.latLng.lng()});
+        lat.value = e.latLng.lat();
+        long.value = e.latLng.lng();
+    });
 
-        var longitude = document.querySelector("#nao_appbundle_observation_longitude");
-        longitude.addEventListener("input", function(e) {
-            setPos({lat: parseFloat(lat.value), lng: parseFloat(long.value)});
-        });
-
-        function setPos(location) {
-            marker.setPosition(location);
-            map.setCenter(location);
-            map.setZoom(9);
+    // Si clic sur le bouton de geoloc
+    document.querySelector("#geoloc").addEventListener("click", function(e) {
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                lat.value = pos.coords.latitude;
+                long.value = pos.coords.longitude;
+                setPos({lat: pos.coords.latitude, lng: pos.coords.longitude});
+            });
+        } else {
+            document.querySelector('#error').style.display = "block";
         }
-    }
+    });
 
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9seytk1giw2EFp4XLJo17y5H-jiDvrcI&callback=initMap"
-        async defer></script>
-</body>
-</html>
+    // Si un des inputs de localisations sont modifiés
+    var latitude = document.querySelector("#nao_appbundle_observation_latitude");
+    latitude.addEventListener("input", function(e) {
+        setPos({lat: parseFloat(lat.value), lng: parseFloat(long.value)});
+    });
+
+    var longitude = document.querySelector("#nao_appbundle_observation_longitude");
+    longitude.addEventListener("input", function(e) {
+        setPos({lat: parseFloat(lat.value), lng: parseFloat(long.value)});
+    });
+
+    function setPos(location) {
+        marker.setPosition(location);
+        window.setTimeout(function () {
+            map.setCenter(location);
+            map.setZoom(8);
+        }, 300);
+    }
+}
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9seytk1giw2EFp4XLJo17y5H-jiDvrcI&callback=initMap"
+    async defer></script>
+{% endblock %}

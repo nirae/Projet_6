@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 class ObservationType extends AbstractType
@@ -22,20 +23,31 @@ class ObservationType extends AbstractType
         $builder
             ->add('date', DateType::class, array(
                 'format' => 'dd-MM-yyyy',
-                'label' => 'Jour de l\'observation',
+                'label' => 'Jour de l\'observation :',
             ))
-            ->add('latitude', TextType::class)
-            ->add('longitude', TextType::class)
-            ->add('userMessage', TextareaType::class)
+            ->add('latitude', TextType::class, array(
+                'constraints' => new Assert\Regex(array(
+                    'pattern' => '/[0-9*]/',
+                    'message' => 'Ne correspond pas a des coordonnées',
+                ))
+            ))
+            ->add('longitude', TextType::class, array(
+                'constraints' => new Assert\Regex(array(
+                    'pattern' => '/[0-9*]/',
+                    'message' => 'Ne correspond pas a des coordonnées',
+                ))
+            ))
+            ->add('userMessage', TextareaType::class, array(
+                'label' => 'Message :',
+            ))
             ->add('species', EntityType::class, array(
+                'label' => 'Espèce observée :',
                 'class' => 'NAOAppBundle:Species',
                 'choice_label' => 'nomValide',
             ))
             ->add('image', ImageType::class, array(
+                'label' => ' ',
                 'required' => false,
-            ))
-            ->add('save', SubmitType::class, array(
-                'label' => 'Valider',
             ))
         ;
     }
