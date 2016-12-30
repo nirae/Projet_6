@@ -1,13 +1,45 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Register</title>
-</head>
-<body>
-    <h1>Register</h1>
-    {{ form_start(form) }}
-    {{ form_errors(form) }}
-    {{ form_end(form) }}
-</body>
-</html>
+{% extends 'NAOAppBundle:App:layout.html.twig' %}
+{% block title %}{{ parent() }} Inscription{% endblock %}
+{% block contenu %}
+<div class="row">
+    <div class="col-md-4 col-sm-1"></div>
+    <div class="col-md-4 col-sm-10">
+        <div class="bloc-blanc bloc-login">
+            {% for flash_message in app.session.flashBag.get('notice') %}
+                <div class="alert alert-info flash-notice">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+            <h1 class="titre-login text-center">Inscription</h1>
+            {{ form_start(form) }}
+            {{ form_errors(form) }}
+            <div>
+                {{ form_label(form.username) }}
+                {{ form_errors(form.username) }}
+                {{ form_widget(form.username) }}
+            </div>
+            <div>
+                {{ form_label(form.plainPassword) }}
+                {{ form_errors(form.plainPassword) }}
+                {{ form_widget(form.plainPassword) }}
+            </div>
+            <div>
+                {{ form_label(form.email) }}
+                {{ form_errors(form.email) }}
+                {{ form_widget(form.email) }}
+            </div>
+
+            <input type="submit" id="nao_appbundle_user_save" class="btn-login bouton-fonce btn btn-default" value="Valider">
+            {{ form_end(form) }}
+            <p class="text-center">
+                Vous possedez déjà un compte? <a href="{{ path("login") }}">Connectez vous</a>
+            </p>
+            <div id="lien-accueil">
+                <a href="/"><span class="fa fa-hand-o-left"></span> Retourner à l'accueil</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-1"></div>
+</div>
+
+{% endblock %}

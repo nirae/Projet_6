@@ -1,21 +1,221 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Observations</title>
-</head>
-<body>
+{% extends 'NAOAppBundle:BackOffice:layout.html.twig' %}
+{% block title %}{{ parent() }} Mes Observations{% endblock %}
+{% block contenu %}
+<div class="container bloc-back">
     {% for flash_message in app.session.flashBag.get('notice') %}
-        <div class="flash-notice">
+        <div class="alert alert-info flash-notice">
             {{ flash_message }}
         </div>
     {% endfor %}
-    <h1>Observations</h1>
-    {% for obs in app.user.observations %}
-        <p>{{ obs.id }} - {{ obs.species.nomValide }} - {{ obs.status }}</p>
-        {% if obs.image %}
-            <img src="/{{ obs.image.webPath }}" alt="{{ obs.image.alt }}" width="150px"/>
-        {% endif %}
-    {% endfor %}
-</body>
-</html>
+    <div class="row">
+        <div class="col-md-4 col-sm-12 bloc-stat">
+            <div class="stat stat1">
+                <div class="bloc-nb-obs">
+                    <p class="text-center titre-nb-obs"><strong>Observations postées</strong></p>
+                </div>
+                <p class="text-center nb-obs"><strong>{{ app.user.observations|length }}</strong></p>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-12 bloc-stat">
+            <div class="stat stat2">
+                <div class="bloc-valid">
+                    <p class="nb-size text-center">
+                        {% set validobs = 0 %}
+                        {% for obs in app.user.observations if obs.status == "Validée" %}
+                            {% set validobs = validobs + 1 %}
+                        {% endfor %}
+                        <strong class="">{{ validobs }}</strong>
+                    </p>
+                </div>
+                <div class="bloc-attente">
+                    <p class="nb-size text-center">
+                        {% set waitobs = 0 %}
+                        {% for obs in app.user.observations if obs.status == "En attente" %}
+                            {% set waitobs = waitobs + 1 %}
+                        {% endfor %}
+                            <strong class="">{{ waitobs }}</strong>
+                    </p>
+                </div>
+                <div class="bloc-refusee">
+                    <p class="nb-size text-center">
+                        {% set noneobs = 0 %}
+                        {% for obs in app.user.observations if obs.status == "Refusée" %}
+                            {% set noneobs = noneobs + 1 %}
+                        {% endfor %}
+                        <strong>{{ noneobs }}</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-12 bloc-stat">
+            <div class="stat stat3">
+                {% if app.user.observations|length > 80 %}
+                <div class="stat-image text-center">
+                    <img src="{{ asset("img/or.png") }}" alt="">
+                    <p>Bravo !</p>
+                </div>
+                {% elseif app.user.observations|length > 40 %}
+                <div class="stat-image text-center">
+                    <img src="{{ asset("img/argent.png") }}" alt="">
+                    <p>Médaille d'or dans {{ 80 - app.user.observations|length }} observations !</p>
+                </div>
+                {% else %}
+                <div class="stat-image text-center">
+                    <img src="{{ asset("img/bronze.png") }}" alt="">
+                    <p>Médaille d'argent dans {{ 40 - app.user.observations|length }} observations !</p>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        {% for obs in app.user.observations|reverse %}
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading{{ obs.id }}">
+
+                    <a href="#collapse{{ obs.id }}" class="a-panel collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
+                        aria-expanded="false" aria-controls="collapse{{ obs.id }}"
+                    >
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <div class="panel-title">
+                                <span class="fa fa-chevron-down"></span>
+                                {{ obs.species.nomValide }}
+                                le
+                                <em>{{ obs.date|date("d/m/Y") }}</em>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <p class="statut text-right">
+                                {{ obs.status }}
+                                {% if obs.status == "Validée" %}
+                                <span class="fa fa-check fa-lg" style="color:#2ecc71"></span>
+                                {% endif %}
+                                {% if obs.status == "Refusée" %}
+                                <span class="fa fa-times fa-lg" style="color:#c0392b"></span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    </a>
+                </div>
+                <div class="panel-collapse collapse" id="collapse{{ obs.id }}" role="tabpanel" aria-labelledby="heading{{ obs.id }}">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <p>
+                                    Vous avez observé l'espèce
+                                    <strong>{{ obs.species.nomValide|lower }}</strong> ({{ obs.species.nomVern|lower }})
+                                    le <strong>{{ obs.date|date("d/m/Y") }}</strong>
+                                    avec les informations suivantes :
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {% if obs.image %}
+                            <div class="col-md-6 col-sm-12 bloc-map">
+                                <p><strong>Emplacement :</strong></p>
+                                <div class="latitude" hidden>{{ obs.latitude }}</div>
+                                <div class="longitude" hidden>{{ obs.longitude }}</div>
+                                <div class="map-obs"></div>
+                            </div>
+                            <div class="col-md-6 col-sm-12 bloc-image">
+                                <p><strong>Photo  :</strong></p>
+                                <div class="image">
+                                    <img src="/{{ obs.image.webPath }}" alt="{{ obs.image.alt }}"/>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="col-sm-12 bloc-map">
+                                <p><strong>Emplacement :</strong></p>
+                                <div class="latitude" hidden>{{ obs.latitude }}</div>
+                                <div class="longitude" hidden>{{ obs.longitude }}</div>
+                                <div class="map-obs"></div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 bloc-message">
+                                <p><strong>Message :</strong></p>
+                                <div class="user-message">
+                                    <p>{{ obs.userMessage }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% if obs.status != "En attente" %}
+                        {% if obs.validationMessage %}
+                        <div class="row">
+                            <div class="col-sm-12 bloc-validation">
+                                <p><strong>Votre observation a été {{ obs.status|lower }} avec le message suivant :</strong></p>
+                                <div class="user-message">
+                                    <p>{{ obs.validationMessage }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="row">
+                            <div class="col-sm-12 bloc-validation">
+                                <p><strong>Votre observation a été {{ obs.status|lower }}</strong></p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<script type="text/javascript">
+
+var tabs = document.querySelectorAll('.panel-heading');
+for (var i = 0; i < tabs.length; i++) {
+    tabs[i].addEventListener('click', function() {
+        window.setTimeout(function() {
+            initMap();
+        }, 100);
+
+    });
+}
+
+mymaps = [];
+markers = [];
+function initMap() {
+    var maps = document.querySelectorAll('.map-obs');
+
+    maps.forEach(function(e) {
+
+        var parent = e.parentNode;
+        var childs = parent.childNodes;
+
+        var lat = parseFloat(childs[1].innerHTML);
+        var lng = parseFloat(childs[3].innerHTML);
+
+        if (isNaN(lat)) {
+            lat = 40;
+        }
+        if (isNaN(lng)) {
+            lng = 2;
+        }
+
+        var map = new google.maps.Map(e, {
+            center: {lat: lat, lng: lng},
+            scrollwheel: false,
+            zoom: 12,
+        });
+        mymaps.push(map);
+
+        var marker = new google.maps.Marker({
+            map: map,
+            position: {lat: lat, lng: lng},
+            animation: google.maps.Animation.DROP,
+        });
+        markers.push(marker);
+    });
+}
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9seytk1giw2EFp4XLJo17y5H-jiDvrcI&callback=initMap"
+    async defer></script>
+{% endblock %}

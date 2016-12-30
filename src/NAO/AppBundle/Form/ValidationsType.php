@@ -20,15 +20,15 @@ class ValidationsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('validationMessage', TextareaType::class)
+            ->add('validationMessage', TextareaType::class, array(
+                'label' => 'Laissez un petit message !'
+            ))
             ->add('status', ChoiceType::class, array(
+                'label' => ' ',
                 'choices' => array(
                     'Validée' => 'Validée',
                     'Refusée' => 'Refusée',
                 ),
-            ))
-            ->add('save', SubmitType::class, array(
-                'label' => 'Valider',
             ))
         ;
     }

@@ -1,28 +1,41 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Login</title>
-</head>
-<body>
-    {% for flash_message in app.session.flashBag.get('notice') %}
-        <div class="flash-notice">
-            {{ flash_message }}
+{% extends 'NAOAppBundle:App:layout.html.twig' %}
+{% block title %}{{ parent() }} Connexion{% endblock %}
+{% block contenu %}
+<div class="row">
+    <div class="col-md-4 col-sm-1"></div>
+    <div class="col-md-4 col-sm-10">
+        <div class="bloc-blanc bloc-login">
+            {% for flash_message in app.session.flashBag.get('notice') %}
+                <div class="alert alert-info flash-notice">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+            <h1 class="titre-login text-center">Connexion</h1>
+            {% if error %}
+            <div class="alert alert-danger">Mauvais identifiant/mot de passe</div>
+            {% endif %}
+
+            <form action="{{ path('login') }}" method="post">
+                <div class="form-group">
+                    <label for="username">Pseudo ou Email</label>
+                    <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}" />
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" class="form-control" id="password" name="_password" />
+                </div>
+                <input type="submit" class="btn-login bouton-fonce btn btn-default" value="Connexion" />
+                <p class="text-center">
+                    Vous n'avez pas encore de compte? <a href="{{ path("registration") }}">Inscrivez vous</a>
+                </p>
+                <div id="lien-accueil">
+                    <a href="/"><span class="fa fa-hand-o-left"></span> Retourner à l'accueil</a>
+                </div>
+
+            </form>
         </div>
-    {% endfor %}
-    <h1>Login</h1>
-    {% if error %}
-    <div class="alert alert-danger">{{ error.message }}</div>
-    {% endif %}
+    </div>
+    <div class="col-md-4 col-sm-1"></div>
+</div>
 
-    <form action="{{ path('login') }}" method="post">
-        <label for="username">Login :</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}" />
-
-        <label for="password">Mot de passe :</label>
-        <input type="password" id="password" name="_password" />
-        <br />
-        <input type="submit" value="Connexion" />
-    </form>
-</body>
-</html>
+{% endblock %}

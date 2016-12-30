@@ -20,6 +20,7 @@ class IndexType extends AbstractType
                 'placeholder' => "Choisissez une espèce",
                 'class' => 'NAOAppBundle:Species',
                 'choice_label' => 'nomValide',
+                'label' => 'Sélectionnez pour filtrer',
             ))
         ;
     }

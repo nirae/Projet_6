@@ -1,129 +1,154 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Accueil</title>
-    <style type="text/css">
-  html, body { height: 100%; margin: 0; padding: 0; }
-  #map { height: 80%; }
-</style>
-</head>
-<body>
-    {% for flash_message in app.session.flashBag.get('notice') %}
-    <div class="flash-notice">
-        {{ flash_message }}
+{% extends 'NAOAppBundle:App:layout.html.twig' %}
+{% block title %}{{ parent() }} Accueil{% endblock %}
+{% block contenu %}
+
+<div class="row">
+    <div class="col-lg-12 intro">
+        <div class="container  bloc-blanc infos">
+            {% for flash_message in app.session.flashBag.get('notice') %}
+            <div class="alert alert-info flash-notice">
+                {{ flash_message }}
+            </div>
+            {% endfor %}
+            <h1>Infos</h1>
+        </div>
     </div>
-    {% endfor %}
-    <h1>Accueil</h1>
-    <a href="/backoffice/ajouter">Ajouter une observation</a>
-    <a href="/login">Connexion</a>
-    <a href="/register">Inscription</a>
-    <a href="/backoffice/mes-observations">Mes Observations</a>
-    <a href="/backoffice/validations">Validation des observations</a>
-    <a href="/backoffice/mon-compte">Mon Compte</a>
-    <a href="/backoffice/admin">Administration</a>
-    <br>
-    {{ form_start(form) }}
-    {{ form_errors(form) }}
-    {{ form_end(form) }}
-    <div id="map"></div>
-    <script
-    src="https://code.jquery.com/jquery-3.1.1.min.js"
-    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-    crossorigin="anonymous"></script>
-    <script type="text/javascript">
+</div>
+<div class="row">
+    <div class="col-lg-12 map-bloc">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 filtre">
 
-    var map;
-    var markers = [];
-    var infos = [];
+                    {{ form_start(form) }}
+                    {{ form_errors(form) }}
+                    {{ form_end(form) }}
+                    <div class="aide alert alert-info">
+                        <p>
+                            Toutes les espèces observées sont affichées sur la carte. Vous pouvez filtrer par espèces
+                            afin d'afficher uniquement celle que vous souhaitez voir.
+                        </p>
+                        <p>
+                            Il est possible de cliquer sur les emplacements d'observations afin d'afficher leur détail.
+                        </p>
+                    </div>
 
-    function initMap() {
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 map">
+                    <div id="map"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 bloc-sous-map">
+                    <p class="text-center">
+                        Vous souhaitez participer au programme? <a href="{{ path("login") }}">Inscrivez vous</a>
+                        ou <a href="{{ path("registration") }}">connectez vous</a> si vous possedez déjà un compte !
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-        var map = new google.maps.Map(document.querySelector('#map'), {
-            center: {lat: 46.46813299215553, lng: 2.57080078125},
-            scrollwheel: false,
-            zoom: 6
-        });
+<script
+src="https://code.jquery.com/jquery-3.1.1.min.js"
+integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+crossorigin="anonymous"></script>
+<script type="text/javascript">
 
-        // Au chargement de la page
+var map;
+var markers = [];
+var infos = [];
+
+function initMap() {
+
+    var map = new google.maps.Map(document.querySelector('#map'), {
+        center: {lat: 46.46813299215553, lng: 2.57080078125},
+        scrollwheel: false,
+        zoom: 6
+    });
+
+    // Au chargement de la page
+    $.post('{{ path("nao_app_ajax_homepage") }}',
+    {id: 'all' },
+    function(rep) {
+        if (rep.response === false) {
+            deleteMarkers();
+            console.log(rep.response + " Fail");
+        } else {
+            deleteMarkers();
+            for (var i = 0; i < rep.response.length; i++) {
+                addMarker(
+                    {lat: parseFloat(rep.response[i].latitude), lng: parseFloat(rep.response[i].longitude)},
+                    rep.response[i].owner
+                );
+            }
+        }
+    }, "json");
+
+    // Si le formulaire change
+    document.querySelector("#nao_appbundle_user_species").addEventListener("change", function(e) {
         $.post('{{ path("nao_app_ajax_homepage") }}',
-        {id: 'all' },
+        {id: e.target.value },
         function(rep) {
             if (rep.response === false) {
                 deleteMarkers();
+                // Ajouter un message
                 console.log(rep.response + " Fail");
             } else {
                 deleteMarkers();
                 for (var i = 0; i < rep.response.length; i++) {
                     addMarker(
-                        {lat: parseFloat(rep.response[i].latitude), lng: parseFloat(rep.response[i].longitude)},
+                        {lat: parseFloat(rep.response[i].latitude),lng: parseFloat(rep.response[i].longitude)},
                         rep.response[i].owner
                     );
                 }
             }
         }, "json");
+    });
 
-        // Si le formulaire change
-        document.querySelector("#nao_appbundle_user_species").addEventListener("change", function(e) {
-            $.post('{{ path("nao_app_ajax_homepage") }}',
-            {id: e.target.value },
-            function(rep) {
-                if (rep.response === false) {
-                    deleteMarkers();
-                    // Ajouter un message
-                    console.log(rep.response + " Fail");
-                } else {
-                    deleteMarkers();
-                    for (var i = 0; i < rep.response.length; i++) {
-                        addMarker(
-                            {lat: parseFloat(rep.response[i].latitude),lng: parseFloat(rep.response[i].longitude)},
-                            rep.response[i].owner
-                        );
-                    }
-                }
-            }, "json");
+    function addMarker(location, owner) {
+        var marker = new google.maps.Marker({
+            position: location,
+            map: map,
+            animation: google.maps.Animation.DROP
         });
+        markers.push(marker);
+        var infowindow = new google.maps.InfoWindow({
+            content: owner,
+        });
+        marker.addListener('click', function() {
+            infowindow.open(map, marker);
+        });
+        infos.push(infowindow);
+    }
 
-        function addMarker(location, owner) {
-            var marker = new google.maps.Marker({
-                position: location,
-                map: map,
-                animation: google.maps.Animation.DROP
-            });
-            markers.push(marker);
-            var infowindow = new google.maps.InfoWindow({
-                content: owner,
-            });
-            marker.addListener('click', function() {
-                infowindow.open(map, marker);
-            });
-            infos.push(infowindow);
-        }
-
-        function setMapOnAll(map) {
-            for (var i = 0; i < markers.length; i++) {
-                markers[i].setMap(map);
-            }
-        }
-
-        function showMarkers() {
-          setMapOnAll(map);
-        }
-        // Cache les markers
-        function clearMarkers() {
-            setMapOnAll(null);
-        }
-
-        // Supprime tous les markers
-        function deleteMarkers() {
-            clearMarkers();
-            markers = [];
-            console.log("delete");
+    function setMapOnAll(map) {
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(map);
         }
     }
 
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9seytk1giw2EFp4XLJo17y5H-jiDvrcI&callback=initMap"
-        async defer></script>
-</body>
-</html>
+    function showMarkers() {
+        setMapOnAll(map);
+    }
+    // Cache les markers
+    function clearMarkers() {
+        setMapOnAll(null);
+    }
+
+    // Supprime tous les markers
+    function deleteMarkers() {
+        clearMarkers();
+        markers = [];
+        console.log("delete");
+    }
+}
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9seytk1giw2EFp4XLJo17y5H-jiDvrcI&callback=initMap"
+async defer></script>
+
+{% endblock %}
