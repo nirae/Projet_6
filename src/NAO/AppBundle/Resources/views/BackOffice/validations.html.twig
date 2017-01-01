@@ -7,12 +7,12 @@
             {{ flash_message }}
         </div>
     {% endfor %}
-
+    <h1 class="titre-validations text-center">Merci de participer aux validations</h1>
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         {% if observations|length == 0 %}
         <div class="alert alert-info">
             Il n'y a pas d'observations en attente pour le moment!
-            Un peu de patience...
+            Bientôt...
         </div>
         {% endif %}
         {% for obs in observations %}

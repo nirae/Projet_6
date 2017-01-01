@@ -310,6 +310,11 @@ class User implements AdvancedUserInterface, \Serializable
         $this->isActive = $isActive;
     }
 
+    public function getIsActive() {
+        
+        return $this->isActive;
+    }
+
     public function activate() {
 
         $this->isActive = true;

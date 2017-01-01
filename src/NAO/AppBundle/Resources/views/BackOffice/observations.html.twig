@@ -57,18 +57,25 @@
                 {% elseif app.user.observations|length > 40 %}
                 <div class="stat-image text-center">
                     <img src="{{ asset("img/argent.png") }}" alt="">
-                    <p>Médaille d'or dans {{ 80 - app.user.observations|length }} observations !</p>
+                    <p><em>Médaille d'or dans {{ 80 - app.user.observations|length }} observations !</em></p>
                 </div>
                 {% else %}
                 <div class="stat-image text-center">
                     <img src="{{ asset("img/bronze.png") }}" alt="">
-                    <p>Médaille d'argent dans {{ 40 - app.user.observations|length }} observations !</p>
+                    <p><em>Médaille d'argent dans {{ 40 - app.user.observations|length }} observations !</em></p>
                 </div>
                 {% endif %}
 
             </div>
         </div>
     </div>
+    {% if app.user.observations|length == 0 %}
+        <div class="alert alert-info">
+            <p>
+                Vous n'avez pas encore ajouté d'observations!
+            </p>
+        </div>
+    {% endif %}
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         {% for obs in app.user.observations|reverse %}
             <div class="panel panel-default">

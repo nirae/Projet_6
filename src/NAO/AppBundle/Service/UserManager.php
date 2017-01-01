@@ -111,7 +111,7 @@ class UserManager
             // Envoi du message
             $this->mailer->send($message);
             // Redirection
-            $response = new RedirectResponse('backoffice/mes-observations');
+            $response = new RedirectResponse('/login');
             $response->send();
         }
 
@@ -194,6 +194,8 @@ class UserManager
     public function listUsers() {
 
         $users = $this->em->getRepository('NAOAppBundle:User')->findAll();
+        $activated = $this->em->getRepository('NAOAppBundle:User')->findByIsActive(true);
+        $disabled = $this->em->getRepository('NAOAppBundle:User')->findByIsActive(false);
 
         $amateurs = array();
         $naturs = array();
@@ -211,6 +213,9 @@ class UserManager
         }
 
         return array(
+            'activatedUsers' => $activated,
+            'disabledUsers' => $disabled,
+            'users' => $users,
             'amateurs' => $amateurs,
             'naturs' => $naturs,
             'admins' => $admins,
@@ -251,12 +256,73 @@ class UserManager
             // Flash message
             $this->session->getFlashBag()->add('notice', 'Votre compte a bien été activé, vous pouvez désormais vous connecter');
             // Redirection
-            return $user;
+            $response = new RedirectResponse('/login');
+            $response->send();
+        } else {
+            // Flash message
+            $this->session->getFlashBag()->add('notice', 'Erreur lors de l\'activation du compte');
+            // Redirection
+            $response = new RedirectResponse('/login');
+            $response->send();
+        }
+    }
+
+    // Gestion par admin
+    public function confirmationAdmin($id, $username, $email, $status) {
+
+        //Récupère l'user
+        $user = $this->em->getRepository("NAOAppBundle:User")->find($id);
+
+        // Si l'user correspond bien au lien
+        if ($user->getUsername() == $username && $user->getEmail() == $email) {
+
+            if ($status == 'disable') {
+
+                // Désactivation
+                $user->disable();
+                $result = 'désactivé';
+            } elseif ($status == 'activate') {
+
+                // Activation
+                $user->activate();
+                $result = 'activé';
+            } else {
+
+                // Flash message
+                $this->session->getFlashBag()->add('notice', 'Erreur');
+                // Redirection
+                $response = new RedirectResponse('/backoffice/admin');
+                $response->send();
+            }
+
+            // Flush
+            $this->em->persist($user);
+            $this->em->flush();
+            // Mail
+            $message = \Swift_Message::newInstance()
+            ->setSubject('Le statut de votre compte a été modifié par un administrateur')
+            ->setFrom('nao@nicolasdubouilh.fr')
+            ->setTo($user->getEmail())
+            ->setBody(
+                $this->templating->render('NAOAppBundle:Email:admin-modif.html.twig', array(
+                    'status' => $result,
+                    'user' => $user,
+                )),
+                'text/html'
+            );
+            // Envoi du message
+            $this->mailer->send($message);
+            // Flash message
+            $this->session->getFlashBag()->add('notice', 'Le statut du compte a bien été modifié');
+            // Redirection
+            $response = new RedirectResponse('/backoffice/admin');
+            $response->send();
         } else {
             // Flash message
             $this->session->getFlashBag()->add('notice', 'Erreur');
             // Redirection
-            return $user;
+            $response = new RedirectResponse('/backoffice/admin');
+            $response->send();
         }
     }
 

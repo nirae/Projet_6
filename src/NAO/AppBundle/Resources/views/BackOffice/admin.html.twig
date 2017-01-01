@@ -1,33 +1,365 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Admin</title>
-    </head>
-    <body>
-        {% for flash_message in app.session.flashBag.get('notice') %}
-            <div class="flash-notice">
-                {{ flash_message }}
+{% extends 'NAOAppBundle:BackOffice:layout.html.twig' %}
+{% block title %}{{ parent() }} Administration{% endblock %}
+{% block contenu %}
+<div class="container bloc-back">
+    {% for flash_message in app.session.flashBag.get('notice') %}
+    <div class="alert alert-info flash-notice">
+        {{ flash_message }}
+    </div>
+    {% endfor %}
+    <div class="">
+        <div class="row">
+            <div class="col-md-4 col-sm-12 bloc-stat">
+                <div class="stat stat1 stat-users">
+                    <div class="bloc-nb-obs">
+                        <p class="text-center titre-nb-obs"><strong>Utilisateurs</strong></p>
+                    </div>
+                    <p class="text-center nb-obs"><strong>{{ users.users|length }}</strong></p>
+                </div>
             </div>
-        {% endfor %}
-        <h1>Admin</h1>
-        <div class="">
-            <h1>Particuliers : </h1>
-            {% for a in users.amateurs %}
-                <p>{{ a.username }}</p>
-            {% endfor %}
+            <div class="col-md-4 col-sm-12 bloc-stat">
+                <div class="stat stat1 stat-active">
+                    <div class="bloc-nb-obs">
+                        <p class="text-center titre-nb-obs"><strong>Actifs</strong></p>
+                    </div>
+                    <p class="text-center nb-obs"><strong>{{ users.activatedUsers|length }}</strong></p>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12 bloc-stat">
+                <div class="stat stat1 stat-disable">
+                    <div class="bloc-nb-obs">
+                        <p class="text-center titre-nb-obs"><strong>Inactifs</strong></p>
+                    </div>
+                    <p class="text-center nb-obs"><strong>{{ users.disabledUsers|length }}</strong></p>
+                </div>
+            </div>
         </div>
-        <div class="">
-            <h1>Naturalistes : </h1>
-            {% for n in users.naturs %}
-                <p>{{ n.username }}</p>
-            {% endfor %}
+        <div class="row">
+            <div class="col-sm-12 bloc-bouton-add">
+                <p class="text-right">
+                    <a class="" href="{{ path('nao_back_office_admin_add') }}">
+                        <span class="fa fa-plus fa-lg"></span>
+                    </a>
+                </p>
+            </div>
         </div>
-        <div class="">
-            <h1>Admin : </h1>
-            {% for a in users.admins %}
-                <p>{{ a.username }}</p>
-            {% endfor %}
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a class="text-center" href="#particuliers" aria-controls="particuliers" role="tab" data-toggle="tab">
+                    <strong>Particuliers</strong>
+                </a>
+            </li>
+            <li role="presentation">
+                <a class="text-center" href="#naturalistes" aria-controls="naturalistes" role="tab" data-toggle="tab">
+                    <strong>Naturalistes</strong>
+                </a>
+            </li>
+            <li role="presentation">
+                <a class="text-center" href="#admins" aria-controls="admins" role="tab" data-toggle="tab">
+                    <strong>Administrateurs</strong>
+                </a>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="bloc-tabs">
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="particuliers">
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        {% for a in users.amateurs %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="heading{{ a.id }}">
+
+                                    <a href="#collapse{{ a.id }}" class="a-panel collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
+                                        aria-expanded="false" aria-controls="collapse{{ a.id }}"
+                                    >
+                                    <div class="row">
+                                        <div class="col-sm-10">
+                                            <div class="panel-title">
+                                                <span class="fa fa-chevron-down"></span>
+                                                <strong>{{ a.username|upper }}</strong>
+                                                , membre depuis le
+                                                <em>{{ a.creationDate|date("d/m/Y") }}</em>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p class="statut text-right">
+                                                {% if a.isActive %}
+                                                Activé
+                                                <span class="fa fa-check fa-lg" style="color:#2ecc71"></span>
+                                                {% else %}
+                                                Désactivé
+                                                <span class="fa fa-times fa-lg" style="color:#c0392b"></span>
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </div>
+                                <div class="panel-collapse collapse panel-admin" id="collapse{{ a.id }}" role="tabpanel" aria-labelledby="heading{{ a.id }}">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <p>
+                                                    <strong>Adresse mail :</strong>
+                                                    {{ a.email }}
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <p class="text-right">
+                                                    <strong>Observations postées :</strong>
+                                                    {{ a.observations|length }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <p class="text-center">
+                                                    {% set v = 0 %}
+                                                    {% for obs in a.observations if obs.status == "Validée" %}
+                                                        {% set v = v + 1 %}
+                                                    {% endfor %}
+                                                    {{ v }} validée(s)
+                                                    <span class="fa fa-check fa-lg" style="color:#2ecc71"></span>
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <p class="text-center">
+                                                    {% set r = 0 %}
+                                                    {% for obs in a.observations if obs.status == "Refusée" %}
+                                                        {% set r = r + 1 %}
+                                                    {% endfor %}
+                                                    {{ r }} refusée(s)
+                                                    <span class="fa fa-times fa-lg" style="color:#c0392b"></span>
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <p class="text-center">
+                                                    {% set e = 0 %}
+                                                    {% for obs in a.observations if obs.status == "En attente" %}
+                                                        {% set e = e + 1 %}
+                                                    {% endfor %}
+                                                    {{ e }} en attente
+                                                    <span class="fa fa-question fa-lg" style="color:#333"></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            {% if a.isActive %}
+                                            <p class="text-center">
+                                                <a class="btn btn-default bouton-fonce disable" href="{{ path('nao_back_office_admin_confirmation', {'id': a.id, 'username': a.username, 'email': a.email, 'status': 'disable'}) }}">Désactiver</a>
+                                            </p>
+                                            {% else %}
+                                            <p class="text-center">
+                                                <a class="btn btn-default bouton-fonce activate" href="{{ path('nao_back_office_admin_confirmation', {'id': a.id, 'username': a.username, 'email': a.email, 'status': 'activate'}) }}">Activer</a>
+                                            </p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="naturalistes">
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        {% for n in users.naturs %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="heading{{ n.id }}">
+
+                                    <a href="#collapse{{ n.id }}" class="a-panel collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
+                                        aria-expanded="false" aria-controls="collapse{{ n.id }}"
+                                    >
+                                    <div class="row">
+                                        <div class="col-sm-10">
+                                            <div class="panel-title">
+                                                <span class="fa fa-chevron-down"></span>
+                                                <strong>{{ n.username|upper }}</strong>
+                                                , membre depuis le
+                                                <em>{{ n.creationDate|date("d/m/Y") }}</em>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p class="statut text-right">
+                                                {% if n.isActive %}
+                                                Activé
+                                                <span class="fa fa-check fa-lg" style="color:#2ecc71"></span>
+                                                {% else %}
+                                                Désactivé
+                                                <span class="fa fa-times fa-lg" style="color:#c0392b"></span>
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </div>
+                                <div class="panel-collapse collapse panel-admin" id="collapse{{ n.id }}" role="tabpanel" aria-labelledby="heading{{ n.id }}">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <p>
+                                                    <strong>Adresse mail :</strong>
+                                                    {{ n.email }}
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <p class="text-right">
+                                                    <strong>Observations postées :</strong>
+                                                    {{ n.observations|length }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <p class="text-center">
+                                                    {% set v = 0 %}
+                                                    {% for obs in n.observations if obs.status == "Validée" %}
+                                                        {% set v = v + 1 %}
+                                                    {% endfor %}
+                                                    {{ v }} validée(s)
+                                                    <span class="fa fa-check fa-lg" style="color:#2ecc71"></span>
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <p class="text-center">
+                                                    {% set r = 0 %}
+                                                    {% for obs in n.observations if obs.status == "Refusée" %}
+                                                        {% set r = r + 1 %}
+                                                    {% endfor %}
+                                                    {{ r }} refusée(s)
+                                                    <span class="fa fa-times fa-lg" style="color:#c0392b"></span>
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <p class="text-center">
+                                                    {% set e = 0 %}
+                                                    {% for obs in n.observations if obs.status == "En attente" %}
+                                                        {% set e = e + 1 %}
+                                                    {% endfor %}
+                                                    {{ e }} en attente
+                                                    <span class="fa fa-question fa-lg" style="color:#333"></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            {% if n.isActive %}
+                                            <p class="text-center">
+                                                <a class="btn btn-default bouton-fonce disable" href="{{ path('nao_back_office_admin_confirmation', {'id': n.id, 'username': n.username, 'email': n.email, 'status': 'disable'}) }}">Désactiver</a>
+                                            </p>
+                                            {% else %}
+                                            <p class="text-center">
+                                                <a class="btn btn-default bouton-fonce activate" href="{{ path('nao_back_office_admin_confirmation', {'id': n.id, 'username': n.username, 'email': n.email, 'status': 'activate'}) }}">Activer</a>
+                                            </p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="admins">
+                    <div class="">
+                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                            {% for a in users.admins %}
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" role="tab" id="heading{{ a.id }}">
+
+                                        <a href="#collapse{{ a.id }}" class="a-panel collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
+                                            aria-expanded="false" aria-controls="collapse{{ a.id }}"
+                                        >
+                                        <div class="row">
+                                            <div class="col-sm-10">
+                                                <div class="panel-title">
+                                                    <span class="fa fa-chevron-down"></span>
+                                                    <strong>{{ a.username|upper }}</strong>
+                                                    , membre depuis le
+                                                    <em>{{ a.creationDate|date("d/m/Y") }}</em>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <p class="statut text-right">
+                                                    {% if a.isActive %}
+                                                    Activé
+                                                    <span class="fa fa-check fa-lg" style="color:#2ecc71"></span>
+                                                    {% else %}
+                                                    Désactivé
+                                                    <span class="fa fa-times fa-lg" style="color:#c0392b"></span>
+                                                    {% endif %}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        </a>
+                                    </div>
+                                    <div class="panel-collapse collapse panel-admin" id="collapse{{ a.id }}" role="tabpanel" aria-labelledby="heading{{ a.id }}">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <p>
+                                                        <strong>Adresse mail :</strong>
+                                                        {{ a.email }}
+                                                    </p>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <p class="text-right">
+                                                        <strong>Observations postées :</strong>
+                                                        {{ a.observations|length }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-4">
+                                                    <p class="text-center">
+                                                        {% set v = 0 %}
+                                                        {% for obs in a.observations if obs.status == "Validée" %}
+                                                            {% set v = v + 1 %}
+                                                        {% endfor %}
+                                                        {{ v }} validée(s)
+                                                        <span class="fa fa-check fa-lg" style="color:#2ecc71"></span>
+                                                    </p>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <p class="text-center">
+                                                        {% set r = 0 %}
+                                                        {% for obs in a.observations if obs.status == "Refusée" %}
+                                                            {% set r = r + 1 %}
+                                                        {% endfor %}
+                                                        {{ r }} refusée(s)
+                                                        <span class="fa fa-times fa-lg" style="color:#c0392b"></span>
+                                                    </p>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <p class="text-center">
+                                                        {% set e = 0 %}
+                                                        {% for obs in a.observations if obs.status == "En attente" %}
+                                                            {% set e = e + 1 %}
+                                                        {% endfor %}
+                                                        {{ e }} en attente
+                                                        <span class="fa fa-question fa-lg" style="color:#333"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                {% if a.isActive %}
+                                                <p class="text-center">
+                                                    <a class="btn btn-default bouton-fonce disable" href="{{ path('nao_back_office_admin_confirmation', {'id': a.id, 'username': a.username, 'email': a.email, 'status': 'disable'}) }}">Désactiver</a>
+                                                </p>
+                                                {% else %}
+                                                <p class="text-center">
+                                                    <a class="btn btn-default bouton-fonce activate" href="{{ path('nao_back_office_admin_confirmation', {'id': a.id, 'username': a.username, 'email': a.email, 'status': 'activate'}) }}">Activer</a>
+                                                </p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </body>
-</html>
+    </div>
+</div>
+{% endblock %}
