@@ -84,8 +84,6 @@ class UserManager
             // Flush
             $this->em->persist($user);
             $this->em->flush();
-            // Flash Message
-            $this->session->getFlashBag()->add('notice', 'Un email contenant le lien de confirmation vous a été envoyé');
             // Création lien de confirmation
             $link = $this->router->generate(
                 'nao_back_office_confirmation',
@@ -112,6 +110,8 @@ class UserManager
             $this->mailer->send($message);
             // Redirection
             $response = new RedirectResponse('/login');
+            // Flash Message
+            $this->session->getFlashBag()->add('notice', 'Un email contenant le lien de confirmation vous a été envoyé');
             $response->send();
         }
 
@@ -145,12 +145,6 @@ class UserManager
             $this->em->persist($user);
             $this->em->flush();
 
-            // Flash Message
-            $this->session->getFlashBag()->add(
-                    'notice',
-                    'Utilisateur bien ajouté, il recevra un email contenant son mot de passe provisoire'
-                );
-
             // Pseudo de l'admin
             $admin = $this->security->getToken()->getUser();
 
@@ -171,7 +165,7 @@ class UserManager
             ->setFrom('nao@nicolasdubouilh.fr')
             ->setTo($user->getEmail())
             ->setBody(
-                $this->templating->render('NAOAppBundle:Email:activation.twig', array(
+                $this->templating->render('NAOAppBundle:Email:activation.html.twig', array(
                     'user' => $user,
                     'admin' => $admin,
                     'pass' => $generatedPass,
@@ -184,6 +178,11 @@ class UserManager
 
             // Redirection
             $response = new RedirectResponse('admin');
+            // Flash Message
+            $this->session->getFlashBag()->add(
+                    'notice',
+                    'Utilisateur bien ajouté, il recevra un email contenant son mot de passe provisoire'
+                );
             $response->send();
         }
 
@@ -345,7 +344,7 @@ class UserManager
             $this->em->persist($user);
             $this->em->flush();
             // Flash Message
-            $this->session->getFlashBag()->add('notice', 'Modification effectuée');
+            $this->session->getFlashBag()->add('notice', 'Modifications effectuées');
             // Envoi email a l'user
             $message = \Swift_Message::newInstance()
             ->setSubject('Les modifications de vos informations ont bien été prises en compte')

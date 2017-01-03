@@ -3,19 +3,58 @@
     <head>
         <meta charset="utf-8">
         <title>Confirmation de création de votre compte</title>
+        <style media="screen">
+        .body {
+            background: #95a5a6;
+        }
+        .container {
+            margin: 30px;
+            background: #ecf0f1;
+            padding: 20px;
+            color: #333;
+        }
+        .infos {
+            background: #fff;
+            margin: 10px;
+            padding: 5px;
+        }
+        a {
+            color: #3498db;
+        }
+        a:hover {
+            color: #2c3e50;
+        }
+        h1 {
+            margin-bottom: 10px;
+        }
+        .red {
+        color: #C82D00;
+        }
+        </style>
     </head>
     <body>
-        {% if admin is defined %}
-        <p>Votre compte a été crée par : {{ admin.username }}</p>
-        {% endif %}
-        pseudo : {{ user.username }}
-        {% if pass is defined %}
-        <p>
-            Votre mot de passe provisoire: {{ pass }} <br>
-            A changer dès votre premiere connexion
-        </p>
-        {% endif %}
-        <br>
-        lien de confirmation : <a href="{{ link }}">{{ link }}</a>
+        <div class="container">
+            <h1>Confirmation de création de votre compte</h1>
+            {% if admin is defined %}
+            <p>Votre compte a été crée par : <strong>{{ admin.username }}</strong></p>
+            {% endif %}
+            <p>Veuillez confirmer votre compte en cliquant sur le lien suivant : <a href="{{ link }}">{{ link }}</a></p>
+            <div class="infos">
+                <h4>Vos informations :</h4>
+                <p>Pseudo : {{ user.username }}</p>
+                <p>Email : {{ user.email }}</p>
+                {% if pass is defined %}
+                <p>
+                    Votre mot de passe provisoire :<br>
+                    <strong>{{ pass }}</strong>
+                </p>
+                <p class="red">
+                    Ce mot de passe est à changer <strong>impérativement</strong> dès votre première connexion en
+                    allant dans la partie "mon compte" accessible depuis le back-office de la plateforme en cliquant sur
+                    votre pseudo en haut a droite de l'écran
+                </p>
+                {% endif %}
+            </div>
+        </div>
     </body>
 </html>

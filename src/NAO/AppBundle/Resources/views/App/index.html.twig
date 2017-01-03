@@ -3,23 +3,35 @@
 {% block contenu %}
 
 <div class="row">
-    <div class="col-lg-12 intro">
-        <div class="container  bloc-blanc infos">
+    <div class="col-md-12 intro">
+        <div class="container bloc-blanc infos">
             {% for flash_message in app.session.flashBag.get('notice') %}
-            <div class="alert alert-info flash-notice">
+            <div class="alert alert-info">
                 {{ flash_message }}
             </div>
             {% endfor %}
-            <h1>Infos</h1>
+            <h1 class="text-center">Bienvenue sur la plateforme d'observation de NAO</h1>
+            <div class="alert alert-info">
+                <p>
+                    Cette plateforme s'inscrit dans notre programme de recensement des oiseaux.
+                    Elle n'est pas seulement accessible à nos naturalistes, nous l'ouvrons à quiconque souhaite participer
+                    et aider l'association.
+                </p>
+            </div>
+            <div class="alert alert-info">
+                <p>
+                    Il suffit de vous inscrire pour découvrir le back-office de la plateforme qui vous permettra d'ajouter vos observations,
+                    directement sur le terrain depuis votre smartphone ou plus tard chez vous.
+                </p>
+            </div>
         </div>
     </div>
 </div>
 <div class="row">
-    <div class="col-lg-12 map-bloc">
+    <div class="col-md-12 map-bloc">
         <div class="container">
             <div class="row">
-                <div class="col-lg-12 filtre">
-
+                <div class="col-md-12 filtre">
                     {{ form_start(form) }}
                     {{ form_errors(form) }}
                     {{ form_end(form) }}
@@ -36,12 +48,12 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-12 map">
+                <div class="col-md-12 map">
                     <div id="map"></div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-12 bloc-sous-map">
+                <div class="col-md-12 bloc-sous-map">
                     <p class="text-center">
                         Vous souhaitez participer au programme? <a href="{{ path("login") }}">Inscrivez vous</a>
                         ou <a href="{{ path("registration") }}">connectez vous</a> si vous possedez déjà un compte !
@@ -96,7 +108,6 @@ function initMap() {
             if (rep.response === false) {
                 deleteMarkers();
                 // Ajouter un message
-                console.log(rep.response + " Fail");
             } else {
                 deleteMarkers();
                 for (var i = 0; i < rep.response.length; i++) {
@@ -143,7 +154,6 @@ function initMap() {
     function deleteMarkers() {
         clearMarkers();
         markers = [];
-        console.log("delete");
     }
 }
 

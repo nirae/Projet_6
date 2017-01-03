@@ -6,7 +6,7 @@
     <div class="col-md-4 col-sm-10">
         <div class="bloc-blanc bloc-login">
             {% for flash_message in app.session.flashBag.get('notice') %}
-                <div class="alert alert-info flash-notice">
+                <div class="alert alert-info">
                     {{ flash_message }}
                 </div>
             {% endfor %}
