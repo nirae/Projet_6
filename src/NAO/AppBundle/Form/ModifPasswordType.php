@@ -19,12 +19,11 @@ class ModifPasswordType extends AbstractType
         $builder
             ->add('plainPassword', RepeatedType::class, array(
                 'type' => PasswordType::class,
-                'first_options'  => array('label' => 'New Password'),
-                'second_options' => array('label' => 'Repeat New Password'),
+                'first_options'  => array('label' => 'Nouveau mot de passe'),
+                'second_options' => array('label' => 'Confirmation'),
             ))
-            ->add('oldPassword', PasswordType::class)
-            ->add('save', SubmitType::class, array(
-                'label' => 'Modifier',
+            ->add('oldPassword', PasswordType::class, array(
+                'label' => 'Mot de passe actuel',
             ))
         ;
     }

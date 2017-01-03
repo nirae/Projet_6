@@ -18,17 +18,18 @@ class AdminUserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username', TextType::class)
-            ->add('email', EmailType::class)
+            ->add('username', TextType::class, array(
+                'label' => 'Pseudo',
+            ))
+            ->add('email', EmailType::class, array(
+                'label' => 'Adresse email',
+            ))
             ->add('role', ChoiceType::class, array(
                 'choices' => array(
                     'Particulier' => 'ROLE_USER',
                     'Naturaliste' => 'ROLE_NATUR',
                     'Administrateur' => 'ROLE_ADMIN',
                 ),
-            ))
-            ->add('save', SubmitType::class, array(
-                'label' => 'Créer',
             ))
         ;
     }

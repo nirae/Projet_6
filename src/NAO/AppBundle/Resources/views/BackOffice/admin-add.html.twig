@@ -1,18 +1,50 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Admin</title>
-    </head>
-    <body>
-        {% for flash_message in app.session.flashBag.get('notice') %}
-            <div class="flash-notice">
-                {{ flash_message }}
-            </div>
-        {% endfor %}
-        <h1>Admin</h1>
+{% extends 'NAOAppBundle:BackOffice:layout.html.twig' %}
+{% block title %}{{ parent() }} Ajouter un utilisateur{% endblock %}
+{% block contenu %}
+<div class="container bloc-back">
+    {% for flash_message in app.session.flashBag.get('notice') %}
+        <div class="flash-notice">
+            {{ flash_message }}
+        </div>
+    {% endfor %}
+    <h1 class="text-center">Ajouter un utilisateur</h1>
+    <div class="bloc-blanc bloc-admin-add-user">
         {{ form_start(form) }}
         {{ form_errors(form) }}
+        <div class="row">
+            <div class="col-sm-12">
+                {{ form_label(form.username) }}
+                {{ form_errors(form.username) }}
+                {{ form_widget(form.username) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                {{ form_label(form.email) }}
+                {{ form_errors(form.email) }}
+                {{ form_widget(form.email) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                {{ form_label(form.role) }}
+                {{ form_errors(form.role) }}
+                {{ form_widget(form.role) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <input type="submit" id="nao_appbundle_user_save" class="btn btn-default bouton-fonce" value="Créer">
+            </div>
+        </div>
         {{ form_end(form) }}
-    </body>
-</html>
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="lien-accueil">
+                    <a href="{{ path('nao_back_office_admin') }}"><span class="fa fa-hand-o-left"></span> Retour</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

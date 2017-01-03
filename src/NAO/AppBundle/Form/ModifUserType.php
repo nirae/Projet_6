@@ -19,11 +19,14 @@ class ModifUserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username', TextType::class)
-            ->add('email', EmailType::class)
-            ->add('oldPassword', PasswordType::class)
-            ->add('save', SubmitType::class, array(
-                'label' => 'Modifier',
+            ->add('username', TextType::class, array(
+                'label' => 'Pseudo',
+            ))
+            ->add('email', EmailType::class, array(
+                'label' => 'Adresse Email',
+            ))
+            ->add('oldPassword', PasswordType::class, array(
+                'label' => 'Mot de passe',
             ))
         ;
     }

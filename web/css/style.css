@@ -175,6 +175,10 @@ Home
 
 }
 
+.map-bloc .row {
+    margin-bottom: 0;
+}
+
 .filtre, .bloc-sous-map {
     padding: 20px;
     background-color: #fff;
@@ -469,4 +473,46 @@ Admin
 
 .bloc-bouton-add {
     margin-bottom: 30px;
+}
+/*******************************************
+Admin
+*******************************************/
+.bloc-admin-add-user {
+    margin-top: 40px;
+}
+
+.bloc-admin-add-user .lien-accueil {
+    margin-top: 0;
+}
+
+.row {
+    margin-bottom: 20px;
+}
+
+.bloc-admin-add-user .btn {
+    margin-top: 20px;
+    width: 100%;
+}
+/*******************************************
+Account
+*******************************************/
+.bloc-form-account {
+    margin-top: 40px;
+}
+
+.bloc-form-account .bloc-blanc {
+    margin-bottom: 20px;
+}
+
+.bloc-form-account .bloc-blanc h3 {
+
+}
+
+.bloc-form-account .bloc-blanc .row .col-sm-12 {
+    margin-top: 5px;
+}
+
+.bloc-form-account .bloc-blanc .btn {
+    width: 100%;
+    margin-top: 22px;
 }
