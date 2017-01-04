@@ -11,6 +11,10 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
+
 class UserType extends AbstractType
 {
     /**
@@ -21,6 +25,16 @@ class UserType extends AbstractType
         $builder
             ->add('username', TextType::class, array(
                 'label' => 'Pseudo',
+                'constraints' => array(
+                    new NotBlank(),
+                    new Type('string'),
+                    new Length(array(
+                        'min' => 3,
+                        'max' => 50,
+                        'minMessage' => 'Le pseudo ne doit pas être inférieur à 3 caractères',
+                        'maxMessage' => 'Le pseudo ne doit pas être supérieur à 50 caractères',
+                    )),
+                ),
             ))
             ->add('plainPassword', RepeatedType::class, array(
                 'label' => ' ',
@@ -28,7 +42,9 @@ class UserType extends AbstractType
                 'first_options'  => array('label' => 'Mot de passe'),
                 'second_options' => array('label' => 'Répéter le mot de passe'),
             ))
-            ->add('email', EmailType::class)
+            ->add('email', EmailType::class, array(
+                'constraints' => new NotBlank();
+            ))
         ;
     }
 
