@@ -1,11 +1,17 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title></title>
-    </head>
-    <body>
-        Votre observation est passé du statut "En attente" à "{{ obs.status }}" avec le message suivant : <br>
-        <p>{{ obs.validationMessage }}</p>
-    </body>
-</html>
+{% extends 'NAOAppBundle:Email:layout.html.twig' %}
+{% block contenu %}
+<h1>Votre observation a été {{ obs.status|lower }}</h1>
+<div class="infos">
+    <h4>Observation concernée :</h4>
+    <p>Date : {{ obs.date|date('d/m/Y') }}</p>
+    <p>Espèce : {{ obs.species.nomValide }} - {{ obs.species.nomVern }}</p>
+    <p>Localisation : -latitude {{ obs.latitude }} -longitude {{ obs.longitude }}</p>
+    <p>Message : {{ obs.userMessage }}</p>
+</div>
+<div class="infos">
+    <h4>Cette observation à été {{ obs.status|lower }} avec le message suivant : </h4>
+    <p>{{ obs.validationMessage }}</p>
+</div>
+<p>Cet email vous à été envoyé automatiquement par la plateforme d'observations de l'association NAO. Ne pas répondre.</p>
+<p>Si vous ne comprenez pas pourquoi vous recevez cet email, ou en cas de doute, changez votre mot de passe depuis votre espace en ligne. Vous pouvez également contacter un administrateur à l'adresse suivante : nao@nicolasdubouilh.fr</p>
+{% endblock %}

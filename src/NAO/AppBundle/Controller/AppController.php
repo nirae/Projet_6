@@ -80,16 +80,12 @@ class AppController extends Controller
 
     public function postModifPasswordAction(Request $request)
     {
-        $this->get('nao_app.user_manager')->postModifPass($request);
-
-        return;
+        return $this->get('nao_app.user_manager')->postModifPass($request);
     }
 
     public function postModifAccountAction(Request $request)
     {
-        $this->get('nao_app.user_manager')->postModifUser($request);
-
-        return;
+        return $this->get('nao_app.user_manager')->postModifUser($request);
     }
 
     /**

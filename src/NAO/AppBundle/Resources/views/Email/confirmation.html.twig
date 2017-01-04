@@ -1,12 +1,13 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Votre compte a bien été activé, vous pouvez désormais vous connecter</title>
-    </head>
-    <body>
-        Votre compte a bien été activé, vous pouvez désormais vous connecter
-        <br>
-        pseudo : {{ user.username }}
-    </body>
-</html>
+{% extends 'NAOAppBundle:Email:layout.html.twig' %}
+{% block contenu %}
+<h1>Votre compte a bien été activé</h1>
+<p>Vous pouvez désormais vous connecter a votre espace en ligne sur notre plateforme grâce à vos identifiants de connection</p>
+<div class="infos">
+    <h4>Rappel :</h4>
+    <p>Pseudo : {{ user.username }}</p>
+    <p>Email : {{ user.email }}</p>
+    <p>Mot de passe : <span class="red">Vous seul le connaissez</span></p>
+</div>
+<p>Cet email vous à été envoyé automatiquement par la plateforme d'observations de l'association NAO. Ne pas répondre.</p>
+<p>Si vous ne comprenez pas pourquoi vous recevez cet email, ou en cas de doute, changez votre mot de passe depuis votre espace en ligne. Vous pouvez également contacter un administrateur à l'adresse suivante : nao@nicolasdubouilh.fr</p>
+{% endblock %}

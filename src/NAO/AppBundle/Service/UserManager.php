@@ -354,6 +354,10 @@ class UserManager
             $response = new RedirectResponse('/backoffice/mon-compte');
             $response->send();
         }
+        $this->session->getFlashBag()->add('notice', 'Erreur');
+        // Redirection
+        $response = new RedirectResponse('/backoffice/mon-compte');
+        $response->send();
     }
 
     public function modifPass()

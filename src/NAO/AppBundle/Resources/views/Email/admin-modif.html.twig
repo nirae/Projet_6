@@ -1,16 +1,14 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Votre compte a bien été activé, vous pouvez désormais vous connecter</title>
-    </head>
-    <body>
-        Le statut de votre compte a été modifié par un administrateur.
-
-        Votre compte est désormais : {{ status }}
-
+{% extends 'NAOAppBundle:Email:layout.html.twig' %}
+{% block contenu %}
+<h1>Le statut de votre compte a été modifié par un administrateur</h1>
+<div class="infos">
+    <p>
+        Votre compte est désormais : <strong>{{ status }}</strong>
+    </p>
+    <p>
         En cas de réclamation, contactez un administrateur
-        <br>
-        pseudo : {{ user.username }}
-    </body>
-</html>
+    </p>
+</div>
+<p>Cet email vous à été envoyé automatiquement par la plateforme d'observations de l'association NAO. Ne pas répondre.</p>
+<p>Si vous ne comprenez pas pourquoi vous recevez cet email, ou en cas de doute, changez votre mot de passe depuis votre espace en ligne. Vous pouvez également contacter un administrateur à l'adresse suivante : nao@nicolasdubouilh.fr</p>
+{% endblock %}

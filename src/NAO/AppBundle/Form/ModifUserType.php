@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 class ModifUserType extends AbstractType
 {
@@ -37,7 +38,7 @@ class ModifUserType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'validation_groups' => array('registration'),
+            'validation_groups' => array('registration', 'Default'),
             'data_class' => 'NAO\AppBundle\Entity\User'
         ));
     }

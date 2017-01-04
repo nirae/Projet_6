@@ -27,7 +27,7 @@ class User implements AdvancedUserInterface, \Serializable
     private $id;
 
     /**
-    * @ORM\Column(name="username", type="string", unique=true)
+    * @ORM\Column(name="username", type="string")
     * @Assert\NotBlank()
     */
     private $username;
@@ -311,7 +311,7 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     public function getIsActive() {
-        
+
         return $this->isActive;
     }
 

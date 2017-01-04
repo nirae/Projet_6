@@ -12,7 +12,7 @@
             {% endfor %}
             <h1 class="titre-login text-center">Connexion</h1>
             {% if error %}
-            <div class="alert alert-danger">Mauvais identifiant/mot de passe</div>
+            <div class="alert alert-danger">Erreur de connexion. Verifiez que vos identifiants sont corrects ou que votre compte est bien activé</div>
             {% endif %}
 
             <form action="{{ path('login') }}" method="post">
