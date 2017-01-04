@@ -43,7 +43,7 @@ class UserType extends AbstractType
                 'second_options' => array('label' => 'Répéter le mot de passe'),
             ))
             ->add('email', EmailType::class, array(
-                'constraints' => new NotBlank();
+                'constraints' => new NotBlank(),
             ))
         ;
     }
