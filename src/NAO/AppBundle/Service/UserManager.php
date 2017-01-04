@@ -223,38 +223,39 @@ class UserManager
             // Redirection
             $response = new RedirectResponse('/login');
             $response->send();
-        }
-        // Si l'user correspond bien au lien
-        if ($user->getUsername() == $username && $user->getEmail() == $email) {
-            // Activation
-            $user->activate();
-            // Flush
-            $this->em->persist($user);
-            $this->em->flush();
-            // Mail
-            $message = \Swift_Message::newInstance()
-            ->setSubject('Votre compte a bien été confirmé')
-            ->setFrom('nao@nicolasdubouilh.fr')
-            ->setTo($user->getEmail())
-            ->setBody(
-                $this->templating->render('NAOAppBundle:Email:confirmation.html.twig', array(
-                    'user' => $user,
-                )),
-                'text/html'
-            );
-            // Envoi du message
-            $this->mailer->send($message);
-            // Flash message
-            $this->session->getFlashBag()->add('notice', 'Votre compte a bien été activé, vous pouvez désormais vous connecter');
-            // Redirection
-            $response = new RedirectResponse('/login');
-            $response->send();
         } else {
-            // Flash message
-            $this->session->getFlashBag()->add('notice', 'Erreur lors de l\'activation du compte');
-            // Redirection
-            $response = new RedirectResponse('/login');
-            $response->send();
+            // Si l'user correspond bien au lien
+            if ($user->getUsername() == $username && $user->getEmail() == $email) {
+                // Activation
+                $user->activate();
+                // Flush
+                $this->em->persist($user);
+                $this->em->flush();
+                // Mail
+                $message = \Swift_Message::newInstance()
+                ->setSubject('Votre compte a bien été confirmé')
+                ->setFrom('nao@nicolasdubouilh.fr')
+                ->setTo($user->getEmail())
+                ->setBody(
+                    $this->templating->render('NAOAppBundle:Email:confirmation.html.twig', array(
+                        'user' => $user,
+                    )),
+                    'text/html'
+                );
+                // Envoi du message
+                $this->mailer->send($message);
+                // Flash message
+                $this->session->getFlashBag()->add('notice', 'Votre compte a bien été activé, vous pouvez désormais vous connecter');
+                // Redirection
+                $response = new RedirectResponse('/login');
+                $response->send();
+            } else {
+                // Flash message
+                $this->session->getFlashBag()->add('notice', 'Erreur lors de l\'activation du compte');
+                // Redirection
+                $response = new RedirectResponse('/login');
+                $response->send();
+            }
         }
     }
 
