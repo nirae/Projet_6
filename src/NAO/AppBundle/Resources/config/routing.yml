@@ -29,6 +29,10 @@ nao_back_office_confirmation:
     path:   /confirmation-compte/{id}-{username}-{email}
     defaults: { _controller: NAOAppBundle:Security:confirmationAccount }
 
+nao_back_office_reset_password:
+    path:   /reset/{id}-{username}-{email}
+    defaults: { _controller: NAOAppBundle:Security:resetPassword }
+
 nao_back_office_admin_confirmation:
     path:   /confirmation-admin/{id}-{username}-{email}-{status}
     defaults: { _controller: NAOAppBundle:Security:confirmationAdminAccount }

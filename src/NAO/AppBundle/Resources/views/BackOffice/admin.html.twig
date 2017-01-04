@@ -156,6 +156,10 @@
                                             </p>
                                             {% endif %}
                                         </div>
+                                        <div class="row">
+                                            <a href="{{ path('nao_back_office_reset_password', {'id': a.id, 'username': a.username, 'email': a.email}) }}" class="reset btn btn-default bouton-fonce">Réinitialiser le mot de passe</a>
+                                            <p class="text-center"><em>L'utilisateur recevra un email avec son nouveau mot de passe</em></p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -262,6 +266,10 @@
                                                 <a class="btn btn-default bouton-fonce activate" href="{{ path('nao_back_office_admin_confirmation', {'id': n.id, 'username': n.username, 'email': n.email, 'status': 'activate'}) }}">Activer</a>
                                             </p>
                                             {% endif %}
+                                        </div>
+                                        <div class="row">
+                                            <a href="{{ path('nao_back_office_reset_password', {'id': n.id, 'username': n.username, 'email': n.email}) }}" class="reset btn btn-default bouton-fonce">Réinitialiser le mot de passe</a>
+                                            <p class="text-center"><em>L'utilisateur recevra un email avec son nouveau mot de passe</em></p>
                                         </div>
                                     </div>
                                 </div>
@@ -370,6 +378,10 @@
                                                     <a class="btn btn-default bouton-fonce activate" href="{{ path('nao_back_office_admin_confirmation', {'id': a.id, 'username': a.username, 'email': a.email, 'status': 'activate'}) }}">Activer</a>
                                                 </p>
                                                 {% endif %}
+                                            </div>
+                                            <div class="row">
+                                                <a href="{{ path('nao_back_office_reset_password', {'id': a.id, 'username': a.username, 'email': a.email}) }}" class="reset btn btn-default bouton-fonce">Réinitialiser le mot de passe</a>
+                                                <p class="text-center"><em>L'utilisateur recevra un email avec son nouveau mot de passe</em></p>
                                             </div>
                                         </div>
                                     </div>

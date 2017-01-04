@@ -126,7 +126,6 @@ class UserManager
         if ($form->isSubmitted() && $form->isValid()) {
             // Ajouter les roles
             $user->setRoles(array($user->getRole()));
-
             // Générer le mot de passe
             $generatedPass = uniqid('', true);
             $user->setPlainPassword($generatedPass);
@@ -137,14 +136,11 @@ class UserManager
             );
             // Hydrate l'entité avec le nouveau mdp encodé
             $user->setPassword($password);
-
             // Flush
             $this->em->persist($user);
             $this->em->flush();
-
             // Pseudo de l'admin
             $admin = $this->security->getToken()->getUser();
-
             // Création lien de confirmation
             $link = $this->router->generate(
                 'nao_back_office_confirmation',
@@ -259,6 +255,54 @@ class UserManager
         }
     }
 
+    // Réinitialiser mot de passe d'un utilisateur
+    public function resetPassword($id, $username, $email) {
+        //Récupère l'user
+        $user = $this->em->getRepository("NAOAppBundle:User")->find($id);
+        // Si l'user correspond bien au lien
+        if ($user->getUsername() == $username && $user->getEmail() == $email) {
+            // Générer le mot de passe
+            $generatedPass = uniqid('', true);
+            $user->setPlainPassword($generatedPass);
+            // Encoder le mot de passe
+            $password = $this->passEncoder->encodePassword(
+                $user,
+                $user->getPlainPassword()
+            );
+            // Hydrate l'entité avec le nouveau mdp encodé
+            $user->setPassword($password);
+            // Flush
+            $this->em->persist($user);
+            $this->em->flush();
+            // Envoyer mail de confirmation avec le mot de passe provisoire
+            $message = \Swift_Message::newInstance()
+            ->setSubject('Votre mot de passe à été réinitialisé')
+            ->setFrom('nao@nicolasdubouilh.fr')
+            ->setTo($user->getEmail())
+            ->setBody(
+                $this->templating->render('NAOAppBundle:Email:reset.html.twig', array(
+                    'user' => $user,
+                    'pass' => $generatedPass,
+                )),
+                'text/html'
+            );
+            // Envoi du message
+            $this->mailer->send($message);
+            // Flash message
+            $this->session->getFlashBag()->add('notice', 'Réinitialisation du mot de passe OK');
+            // Redirection
+            $response = new RedirectResponse('/backoffice/admin');
+            $response->send();
+
+        } else {
+            // Flash message
+            $this->session->getFlashBag()->add('notice', 'Erreur');
+            // Redirection
+            $response = new RedirectResponse('/backoffice/admin');
+            $response->send();
+        }
+    }
+
     // Gestion par admin
     public function confirmationAdmin($id, $username, $email, $status) {
 
@@ -269,17 +313,14 @@ class UserManager
         if ($user->getUsername() == $username && $user->getEmail() == $email) {
 
             if ($status == 'disable') {
-
                 // Désactivation
                 $user->disable();
                 $result = 'désactivé';
             } elseif ($status == 'activate') {
-
                 // Activation
                 $user->activate();
                 $result = 'activé';
             } else {
-
                 // Flash message
                 $this->session->getFlashBag()->add('notice', 'Erreur');
                 // Redirection

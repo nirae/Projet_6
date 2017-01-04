@@ -38,4 +38,9 @@ class SecurityController extends Controller
     {
         return $this->get('nao_app.user_manager')->confirmationAdmin($id, $username, $email, $status);
     }
+
+    public function resetPasswordAction($id, $username, $email)
+    {
+        return $this->get('nao_app.user_manager')->resetPassword($id, $username, $email);
+    }
 }

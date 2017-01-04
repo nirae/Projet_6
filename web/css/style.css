@@ -61,8 +61,6 @@ App Layout
 }
 
 .navbar-default .navbar-nav>li>a {
-    padding: 10px;
-    margin: 5px 5px;
     color: #2c3e50;
 }
 
@@ -122,8 +120,6 @@ BackOffice Layout
 }
 
 .navbar-inverse .navbar-nav>li>a {
-    padding: 10px;
-    margin: 5px 5px;
     color: #ffffff;
 }
 
@@ -131,13 +127,25 @@ BackOffice Layout
     margin-left: 50px;
 }
 
+.navbar-inverse .navbar-nav>li {
+
+}
+
+.navbar-inverse .navbar-nav>li:focus,
+.navbar-inverse .navbar-nav>li:hover {
+    background: #ffffff;
+    color: #2c3e50;
+}
+
 .navbar-inverse .navbar-nav>li>a:focus, .navbar-inverse .navbar-nav>li>a:hover {
+    background: #ffffff;
     color: #2c3e50;
 }
 
 .navbar-inverse li:hover,
 .navbar-inverse .navbar-nav>.open>a,
 .navbar-inverse .navbar-nav>.open>a:focus,
+.navbar-inverse .navbar-nav>.open>a:active,
 .navbar-inverse .navbar-nav>.open>a:hover {
     background: #ffffff;
     color: #2c3e50;
@@ -437,13 +445,13 @@ Admin
 .disable {
     background: #c0392b;
     border-color: #c0392b;
-    width: 40%;
+    width: 100%;
 }
 
 .activate {
     background: #2ecc71;
     border-color: #2ecc71;
-    width: 40%;
+    width: 100%;
 }
 
 .disable:hover {
@@ -463,6 +471,10 @@ Admin
     color: #ecf0f1;
     border: 4px solid #3498db;
 
+}
+
+.reset {
+    width: 100%;
 }
 
 .bloc-bouton-add a span {

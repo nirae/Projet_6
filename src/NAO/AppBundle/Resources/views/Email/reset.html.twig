@@ -1,0 +1,20 @@
+{% extends 'NAOAppBundle:Email:layout.html.twig' %}
+{% block contenu %}
+<h1>Votre mot de passe à été réinitialisé par un administrateur</h1>
+<div class="infos">
+    <h4>Vos nouvelles informations :</h4>
+    <p>Pseudo : {{ user.username }}</p>
+    <p>Email : {{ user.email }}</p>
+    <p>
+        Votre mot de passe provisoire :<br>
+        <strong>{{ pass }}</strong>
+    </p>
+    <p class="red">
+        Ce mot de passe est à changer <strong>impérativement</strong> en
+        allant dans la partie "mon compte" accessible depuis le back-office de la plateforme en cliquant sur
+        votre pseudo en haut a droite de l'écran
+    </p>
+</div>
+<p>Cet email vous à été envoyé automatiquement par la plateforme d'observations de l'association NAO. Ne pas répondre.</p>
+<p>Si vous ne comprenez pas pourquoi vous recevez cet email, ou en cas de doute, changez votre mot de passe depuis votre espace en ligne. Vous pouvez également contacter un administrateur à l'adresse suivante : nao@nicolasdubouilh.fr</p>
+{% endblock %}
