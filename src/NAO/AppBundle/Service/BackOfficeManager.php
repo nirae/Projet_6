@@ -125,10 +125,7 @@ class BackOfficeManager
                 $this->em->persist($obs);
                 $this->em->flush();
                 // Flash Message
-                $this->session->getFlashBag()->add('notice', 'Observation bien ajoutée');
-                // Redirection
-                $response = new RedirectResponse('mes-observations');
-                $response->send();
+                $this->session->getFlashBag()->add('notice', 'Observation bien ajoutée !');
             }
         }
 

@@ -108,11 +108,8 @@ class UserManager
             );
             // Envoi du message
             $this->mailer->send($message);
-            // Redirection
-            $response = new RedirectResponse('/login');
             // Flash Message
             $this->session->getFlashBag()->add('notice', 'Un email contenant le lien de confirmation vous a été envoyé');
-            $response->send();
         }
 
         return $form->createView();
@@ -176,14 +173,8 @@ class UserManager
             // Envoi du message
             $this->mailer->send($message);
 
-            // Redirection
-            $response = new RedirectResponse('admin');
             // Flash Message
-            $this->session->getFlashBag()->add(
-                    'notice',
-                    'Utilisateur bien ajouté, il recevra un email contenant son mot de passe provisoire'
-                );
-            $response->send();
+            $this->session->getFlashBag()->add('notice', 'Utilisateur bien ajouté, il recevra un email contenant son mot de passe provisoire');
         }
 
         return $form->createView();
@@ -230,7 +221,8 @@ class UserManager
             // Flash message
             $this->session->getFlashBag()->add('notice', 'Votre compte a déjà été activé !');
             // Redirection
-            return $user;
+            $response = new RedirectResponse('/login');
+            $response->send();
         }
         // Si l'user correspond bien au lien
         if ($user->getUsername() == $username && $user->getEmail() == $email) {
@@ -362,12 +354,6 @@ class UserManager
             $response = new RedirectResponse('/backoffice/mon-compte');
             $response->send();
         }
-        // Flash Message
-        $this->session->getFlashBag()->add('notice', 'Erreur');
-        // Redirige quand meme en cas d'erreur
-        $response = new RedirectResponse('/backoffice/mon-compte');
-        $response->send();
-
     }
 
     public function modifPass()
@@ -413,11 +399,5 @@ class UserManager
             $response = new RedirectResponse('/backoffice/mon-compte');
             $response->send();
         }
-        // Flash Message
-        $this->session->getFlashBag()->add('notice', 'Erreur');
-        // Redirige quand meme en cas d'erreur
-        $response = new RedirectResponse('/backoffice/mon-compte');
-        $response->send();
-
     }
 }
