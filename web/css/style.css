@@ -196,6 +196,10 @@ Home
     color: #2c3e50;
 }
 
+.home-infos {
+    margin: 20px;
+}
+
 .map {
  padding: 0;
 }
