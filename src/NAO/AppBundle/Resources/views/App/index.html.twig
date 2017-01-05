@@ -94,7 +94,7 @@ function initMap() {
             for (var i = 0; i < rep.response.length; i++) {
                 addMarker(
                     {lat: parseFloat(rep.response[i].latitude), lng: parseFloat(rep.response[i].longitude)},
-                    rep.response[i].owner
+                    rep.response[i].date
                 );
             }
         }
@@ -113,14 +113,14 @@ function initMap() {
                 for (var i = 0; i < rep.response.length; i++) {
                     addMarker(
                         {lat: parseFloat(rep.response[i].latitude),lng: parseFloat(rep.response[i].longitude)},
-                        rep.response[i].owner
+                        rep.response[i].date
                     );
                 }
             }
         }, "json");
     });
 
-    function addMarker(location, owner) {
+    function addMarker(location, date) {
         var marker = new google.maps.Marker({
             position: location,
             map: map,
@@ -128,7 +128,7 @@ function initMap() {
         });
         markers.push(marker);
         var infowindow = new google.maps.InfoWindow({
-            content: owner,
+            content: date,
         });
         marker.addListener('click', function() {
             infowindow.open(map, marker);

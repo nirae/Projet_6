@@ -90,7 +90,7 @@ class BackOfficeManager
             foreach ($observations as $obs) {
                 $listObservations[] = array(
                     'id' => $obs->getId(),
-                    'owner' => $obs->getOwner()->getUsername(),
+                    'date' => date('d/m/Y', $obs->getDate()->getTimestamp()),
                     'latitude' => $obs->getLatitude(),
                     'longitude' => $obs->getLongitude(),
                 );
