@@ -5,6 +5,7 @@ namespace NAO\AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class SecurityController extends Controller
 {
@@ -34,11 +35,17 @@ class SecurityController extends Controller
         return $this->get('nao_app.user_manager')->confirmation($id, $username, $email);
     }
 
+    /**
+     * @Security("has_role('ROLE_ADMIN')")
+     */
     public function confirmationAdminAccountAction($id, $username, $email, $status)
     {
         return $this->get('nao_app.user_manager')->confirmationAdmin($id, $username, $email, $status);
     }
 
+    /**
+     * @Security("has_role('ROLE_ADMIN')")
+     */
     public function resetPasswordAction($id, $username, $email)
     {
         return $this->get('nao_app.user_manager')->resetPassword($id, $username, $email);

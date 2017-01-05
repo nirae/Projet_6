@@ -27,6 +27,8 @@ class AppController extends Controller
 
     /**
     * @Template("NAOAppBundle:BackOffice:observations.html.twig")
+    *
+    * @Security("has_role('ROLE_USER')")
     */
     public function observationsAction()
     {
@@ -35,6 +37,8 @@ class AppController extends Controller
 
     /**
     * @Template("NAOAppBundle:BackOffice:add.html.twig")
+    *
+    * @Security("has_role('ROLE_USER')")
     */
     public function addAction(Request $request)
     {
@@ -65,6 +69,8 @@ class AppController extends Controller
 
     /**
     * @Template("NAOAppBundle:BackOffice:account.html.twig")
+    * 
+    * @Security("has_role('ROLE_USER')")
     */
     public function accountAction(Request $request)
     {
@@ -78,11 +84,17 @@ class AppController extends Controller
         );
     }
 
+    /**
+     * @Security("has_role('ROLE_USER')")
+     */
     public function postModifPasswordAction(Request $request)
     {
         return $this->get('nao_app.user_manager')->postModifPass($request);
     }
 
+    /**
+     * @Security("has_role('ROLE_USER')")
+     */
     public function postModifAccountAction(Request $request)
     {
         return $this->get('nao_app.user_manager')->postModifUser($request);
